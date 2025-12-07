@@ -1,6 +1,6 @@
 # Task Tracker
 
-A simple CLI task tracker built with Go. This is one of the [roadmap.sh Backend Projects](https://roadmap.sh/backend/projects). The project requirements are outlined [here](https://roadmap.sh/projects/task-tracker).
+A simple CLI task tracker built with Go. This is one of the roadmap.sh [Backend Projects](https://roadmap.sh/backend/projects). The project requirements are outlined [here](https://roadmap.sh/projects/task-tracker).
 
 ## Installation
 
