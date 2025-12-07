@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"strings"
 	"time"
 )
 
@@ -29,9 +30,13 @@ func (t *Tasks) List(writer io.Writer) {
 		return
 	}
 
+	message := &strings.Builder{}
 	for _, task := range tasks {
-		fmt.Fprintf(writer, "todo:\t%s\n", task.Description)
+		item := fmt.Sprintf("todo:\t%s\n", task.Description)
+		message.WriteString(item)
 	}
+
+	fmt.Fprint(writer, message)
 }
 
 func (t *Tasks) Add(items ...string) {
