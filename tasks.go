@@ -18,17 +18,20 @@ type Tasks struct {
 	items []Task
 }
 
-func (t Tasks) Get() []Task {
+func (t *Tasks) Get() []Task {
 	return t.items
 }
 
-func (t Tasks) List(writer io.Writer) {
+func (t *Tasks) List(writer io.Writer) {
 	tasks := t.Get()
 	if len(tasks) == 0 {
 		fmt.Fprintln(writer, "no tasks")
 		return
 	}
-	fmt.Fprintln(writer, "so many tasks")
+
+	for _, task := range tasks {
+		fmt.Fprintf(writer, "todo:\t%s\n", task.Description)
+	}
 }
 
 func (t *Tasks) Add(items ...string) {

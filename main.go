@@ -5,6 +5,11 @@ import (
 )
 
 func main() {
-	tasks := Tasks{}
+	tasks := Tasks{
+		items: []Task{
+			{Description: "drink coffee"},
+			{Description: "go on a walk"},
+		},
+	}
 	tasks.List(os.Stdout)
 }
