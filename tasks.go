@@ -24,19 +24,18 @@ func (t Tasks) Get() []Task {
 
 func (t Tasks) List(writer io.Writer) {
 	tasks := t.Get()
-
 	if len(tasks) == 0 {
 		fmt.Fprintln(writer, "no tasks")
 		return
 	}
-
 	fmt.Fprintln(writer, "so many tasks")
 }
 
-func (t *Tasks) Add(description string) {
-	task := Task{
-		Description: description,
+func (t *Tasks) Add(items ...string) {
+	for _, item := range items {
+		task := Task{
+			Description: item,
+		}
+		t.items = append(t.items, task)
 	}
-
-	t.items = append(t.items, task)
 }
