@@ -13,7 +13,7 @@ Clone this repo and `cd` into the project's root directory. Build the binary wit
 task add "Go to the moon"
 task add "Do a little dance" "Make a little love" "Get down tonight"
 task add "Drink coffee" --done
-task add "Build a task tracker" --doing
+task add "Build a task tracker" --in-progress
 task add "Get a real job" --todo
 
 # Edit tasks
@@ -21,20 +21,22 @@ task update 1 "Go to Discovery Zone"
 
 # Delete tasks
 task delete 1
-task delete --all
-task delete --done
-task delete --doing
-task delete --todo
+
+# Clear tasks
+task clear
+task clear --done 
+task clear --in-progress
+task clear --todo
 
 # Mark task status
-task doing 5
-task done 6
-task todo 5
+task mark 5 --done
+task mark 6 --in-progress
+task mark 5 --todo
 
 # List tasks
 task list
 task list --done
-task list --doing
+task list --in-progress
 task list --todo
 
 # Helpers
