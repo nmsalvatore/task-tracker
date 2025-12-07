@@ -7,15 +7,19 @@ import (
 )
 
 type Task struct {
-	id          int
-	description string
-	status      string
-	createdAt   time.Time
-	updatedAt   time.Time
+	ID          int
+	Description string
+	Status      string
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 type Tasks struct {
 	items []Task
+}
+
+func (t Tasks) Get() []Task {
+	return t.items
 }
 
 func (t Tasks) List(writer io.Writer) {
@@ -29,6 +33,10 @@ func (t Tasks) List(writer io.Writer) {
 	fmt.Fprintln(writer, "so many tasks")
 }
 
-func (t Tasks) Get() []Task {
-	return t.items
+func (t *Tasks) Add(description string) {
+	task := Task{
+		Description: description,
+	}
+
+	t.items = append(t.items, task)
 }
