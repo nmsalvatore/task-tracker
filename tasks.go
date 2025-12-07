@@ -32,8 +32,15 @@ func (t *Tasks) List(writer io.Writer) {
 
 	message := &strings.Builder{}
 	for _, task := range tasks {
-		item := fmt.Sprintf("todo:\t%s\n", task.Description)
-		message.WriteString(item)
+		switch task.Status {
+		case "todo":
+			message.WriteString("• ")
+		case "in-progress":
+			message.WriteString("> ")
+		case "done":
+			message.WriteString("× ")
+		}
+		message.WriteString(task.Description + "\n")
 	}
 
 	fmt.Fprint(writer, message)
@@ -42,7 +49,11 @@ func (t *Tasks) List(writer io.Writer) {
 func (t *Tasks) Add(items ...string) {
 	for _, item := range items {
 		task := Task{
+			ID:          len(t.items) + 1,
 			Description: item,
+			Status:      "todo",
+			CreatedAt:   time.Now(),
+			UpdatedAt:   time.Now(),
 		}
 		t.items = append(t.items, task)
 	}

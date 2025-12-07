@@ -27,7 +27,7 @@ func TestList(t *testing.T) {
 		tasks.List(&buffer)
 
 		got := buffer.String()
-		want := "todo:\tdrink coffee\n"
+		want := "• drink coffee\n"
 
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)
@@ -43,7 +43,7 @@ func TestList(t *testing.T) {
 		tasks.List(&buffer)
 
 		got := buffer.String()
-		want := "todo:\tdo a little dance\ntodo:\tmake a little love\n"
+		want := "• do a little dance\n• make a little love\n"
 
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)
@@ -83,6 +83,15 @@ func TestAdd(t *testing.T) {
 			if got[i].Description != items[i] {
 				t.Errorf("got %q, want %q", got[i].Description, items[i])
 			}
+
+			if got[i].ID != i+1 {
+				t.Errorf("got %d, want %d", got[i].ID, i+1)
+			}
+
+			if got[i].Status != "todo" {
+				t.Errorf("got %q, want %q", got[i].Status, "todo")
+			}
 		}
 	})
+
 }
