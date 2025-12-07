@@ -1,8 +1,17 @@
 package main
 
-func AddTask(task string, status string) string {
-	if status == "" {
-		status = "todo"
+import (
+	"fmt"
+	"io"
+)
+
+func ListTasks(writer io.Writer) {
+	tasks := []string{}
+
+	if len(tasks) == 0 {
+		fmt.Fprintln(writer, "no tasks")
+		return
 	}
-	return status + ": " + task
+
+	fmt.Fprintln(writer, "so many tasks")
 }
