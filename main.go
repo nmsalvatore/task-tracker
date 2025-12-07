@@ -5,5 +5,6 @@ import (
 )
 
 func main() {
-	ListTasks(os.Stdout)
+	tasks := Tasks{}
+	tasks.List(os.Stdout)
 }
