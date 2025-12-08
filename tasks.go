@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"slices"
@@ -55,7 +54,7 @@ func (t *Tasks) Add(status string, items ...string) error {
 
 	options := []string{"todo", "in-progress", "done"}
 	if !slices.Contains(options, status) {
-		return errors.New("status invalid")
+		return fmt.Errorf("invalid status: %q (must be todo, in-progress, or done)", status)
 	}
 
 	for _, item := range items {
