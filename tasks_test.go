@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"slices"
 	"testing"
 )
 
@@ -227,6 +228,49 @@ func TestMark(t *testing.T) {
 
 		if got[0].UpdatedAt.Equal(got[0].CreatedAt) {
 			t.Error("time not updated")
+		}
+	})
+}
+
+func TestDelete(t *testing.T) {
+	t.Run("single task", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("", "first", "second", "third")
+		tasks.Delete(2)
+
+		got := tasks.Get()
+
+		for _, task := range got {
+			if task.Description == "second" {
+				t.Error("task not deleted")
+			}
+		}
+
+		if len(got) == 3 {
+			t.Error("tasks length still 3")
+		}
+	})
+
+	t.Run("multiple tasks", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("", "first", "second", "third")
+		tasks.Delete(2, 3)
+
+		got := tasks.Get()
+
+		deleted := []string{"second", "third"}
+		for _, task := range got {
+			if slices.Contains(deleted, task.Description) {
+				t.Errorf("%q not deleted", task.Description)
+			}
+		}
+	})
+
+	t.Run("invalid id", func(t *testing.T) {
+		tasks := Tasks{}
+		err := tasks.Delete(1)
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
 		}
 	})
 }

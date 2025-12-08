@@ -92,5 +92,25 @@ func (t *Tasks) Mark(id int, status string) error {
 		}
 	}
 
+	// test this
 	return errors.New("task not found")
+}
+
+func (t *Tasks) Delete(ids ...int) error {
+	startLength := len(t.items)
+
+	for _, id := range ids {
+		for i := range t.items {
+			if t.items[i].ID == id {
+				t.items = slices.Delete(t.items, i, i+1)
+				break
+			}
+		}
+	}
+
+	if len(t.items) == startLength {
+		return errors.New("task not found")
+	}
+
+	return nil
 }
