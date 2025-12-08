@@ -111,4 +111,16 @@ func TestAdd(t *testing.T) {
 			t.Errorf("got %q, want %q", got[0].Status, "todo")
 		}
 	})
+
+	t.Run("created at", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("first")
+		tasks.Add("second")
+
+		got := tasks.Get()
+
+		if !got[0].CreatedAt.Before(got[1].CreatedAt) {
+			t.Errorf("first not created before second")
+		}
+	})
 }
