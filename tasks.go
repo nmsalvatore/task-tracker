@@ -126,6 +126,7 @@ func (t *Tasks) Update(id int, description string) error {
 	for i := range t.items {
 		if t.items[i].ID == id {
 			t.items[i].Description = description
+			t.items[i].UpdatedAt = time.Now()
 			return nil
 		}
 	}

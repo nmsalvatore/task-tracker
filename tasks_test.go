@@ -314,4 +314,16 @@ func TestUpdate(t *testing.T) {
 			t.Error("wanted error, but didn't get one")
 		}
 	})
+
+	t.Run("timestamp updated", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("", "first", "third")
+		tasks.Update(2, "second")
+
+		got := tasks.Get()
+
+		if got[1].UpdatedAt.Equal(got[1].CreatedAt) {
+			t.Error("timestamp not updated")
+		}
+	})
 }
