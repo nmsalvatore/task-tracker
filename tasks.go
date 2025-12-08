@@ -84,6 +84,8 @@ func (t *Tasks) getMaxID() (max int) {
 }
 
 func (t *Tasks) Mark(id int, status string) error {
+	// TODO: mark multiple tasks
+
 	if status == "" {
 		return errors.New("mark status empty")
 	}
