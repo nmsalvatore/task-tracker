@@ -165,6 +165,20 @@ func TestAdd(t *testing.T) {
 		}
 	})
 
+	t.Run("status on multiples", func(t *testing.T) {
+		tasks := Tasks{}
+		status := "in-progress"
+		tasks.Add(status, "go on a walk", "live the dream")
+
+		got := tasks.Get()
+
+		for i := range got {
+			if got[i].Status != status {
+				t.Errorf("got %q, want %q", got[0].Status, "in-progress")
+			}
+		}
+	})
+
 	t.Run("status rejected", func(t *testing.T) {
 		tasks := Tasks{}
 		err := tasks.Add("dude", "go on a walk")
