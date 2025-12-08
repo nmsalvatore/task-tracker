@@ -16,10 +16,10 @@ task add "Drink coffee" --done
 task add "Build a task tracker" --in-progress
 task add "Get a real job" --todo
 
-# Edit tasks
+# Update task
 task update 1 "Go to Discovery Zone"
 
-# Delete tasks
+# Delete task(s)
 task delete 1
 
 # Clear tasks
