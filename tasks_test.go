@@ -193,7 +193,7 @@ func TestMark(t *testing.T) {
 
 		for i, status := range []string{"in-progress", "done", "todo"} {
 			if got[i].Status != status {
-				t.Errorf("got %q, want %q", got[0].Status, status)
+				t.Errorf("got %q, want %q", got[i].Status, status)
 			}
 		}
 	})
@@ -208,7 +208,7 @@ func TestMark(t *testing.T) {
 		}
 	})
 
-	t.Run("valid status", func(t *testing.T) {
+	t.Run("invalid status", func(t *testing.T) {
 		tasks := Tasks{}
 		tasks.Add("", "first")
 
