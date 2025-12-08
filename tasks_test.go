@@ -62,36 +62,53 @@ func TestAdd(t *testing.T) {
 		if len(got) != 1 {
 			t.Errorf("got %d tasks, want 1", len(got))
 		}
+	})
+
+	t.Run("multiple tasks", func(t *testing.T) {
+		tasks := Tasks{}
+		items := []string{"do a little dance", "make a little love", "get down tonight"}
+		tasks.Add(items...)
+
+		got := tasks.Get()
+
+		if len(got) != 3 {
+			t.Errorf("got %d tasks, want 3", len(got))
+		}
+	})
+
+	t.Run("id", func(t *testing.T) {
+		tasks := Tasks{}
+		item := "fly to the moon"
+		tasks.Add(item)
+
+		got := tasks.Get()
+
+		if got[0].ID != 1 {
+			t.Errorf("got %d, want %d", got[0].ID, 1)
+		}
+	})
+
+	t.Run("description", func(t *testing.T) {
+		tasks := Tasks{}
+		item := "drink coffee"
+		tasks.Add(item)
+
+		got := tasks.Get()
 
 		if got[0].Description != item {
 			t.Errorf("got %q, want %q", got[0].Description, item)
 		}
 	})
 
-	t.Run("multiple tasks", func(t *testing.T) {
+	t.Run("status", func(t *testing.T) {
 		tasks := Tasks{}
-		items := []string{"do a little dance", "make a little love"}
-		tasks.Add(items...)
+		item := "go on a walk"
+		tasks.Add(item)
 
 		got := tasks.Get()
 
-		if len(got) != 2 {
-			t.Errorf("got %d tasks, want 2", len(got))
-		}
-
-		for i := range 2 {
-			if got[i].Description != items[i] {
-				t.Errorf("got %q, want %q", got[i].Description, items[i])
-			}
-
-			if got[i].ID != i+1 {
-				t.Errorf("got %d, want %d", got[i].ID, i+1)
-			}
-
-			if got[i].Status != "todo" {
-				t.Errorf("got %q, want %q", got[i].Status, "todo")
-			}
+		if got[0].Status != "todo" {
+			t.Errorf("got %q, want %q", got[0].Status, "todo")
 		}
 	})
-
 }
