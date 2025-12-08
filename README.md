@@ -42,5 +42,4 @@ task list --todo
 # Helpers
 task version
 task help
-task tip
 ```
