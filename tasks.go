@@ -41,7 +41,8 @@ func (t *Tasks) List(writer io.Writer) {
 		case "done":
 			message.WriteString("× ")
 		}
-		message.WriteString(task.Description + "\n")
+		item := fmt.Sprintf("%d: %s\n", task.ID, task.Description)
+		message.WriteString(item)
 	}
 
 	fmt.Fprint(writer, message)
