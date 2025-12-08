@@ -236,6 +236,17 @@ func TestMark(t *testing.T) {
 			t.Error("time not updated")
 		}
 	})
+
+	t.Run("invalid id", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("", "sip tea")
+
+		err := tasks.Mark(2, "in-progress")
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+
+	})
 }
 
 func TestDelete(t *testing.T) {
