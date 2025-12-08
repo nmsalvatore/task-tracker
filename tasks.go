@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"slices"
@@ -59,15 +60,37 @@ func (t *Tasks) Add(status string, items ...string) error {
 	}
 
 	for _, item := range items {
+		now := time.Now()
 		task := Task{
 			ID:          len(t.items) + 1,
 			Description: item,
 			Status:      status,
-			CreatedAt:   time.Now(),
-			UpdatedAt:   time.Now(),
+			CreatedAt:   now,
+			UpdatedAt:   now,
 		}
 		t.items = append(t.items, task)
 	}
 
 	return nil
+}
+
+func (t *Tasks) Mark(id int, status string) error {
+	if status == "" {
+		return errors.New("mark status empty")
+	}
+
+	options := []string{"todo", "in-progress", "done"}
+	if !slices.Contains(options, status) {
+		return fmt.Errorf("invalid status: %q (must be todo, in-progress, or done)", status)
+	}
+
+	for i := range t.items {
+		if t.items[i].ID == id {
+			t.items[i].Status = status
+			t.items[i].UpdatedAt = time.Now()
+			return nil
+		}
+	}
+
+	return errors.New("task not found")
 }

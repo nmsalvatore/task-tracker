@@ -178,3 +178,55 @@ func TestAdd(t *testing.T) {
 		}
 	})
 }
+
+func TestMark(t *testing.T) {
+	t.Run("status update", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("", "first", "second")
+		tasks.Add("done", "third")
+
+		tasks.Mark(1, "in-progress")
+		tasks.Mark(2, "done")
+		tasks.Mark(3, "todo")
+
+		got := tasks.Get()
+
+		for i, status := range []string{"in-progress", "done", "todo"} {
+			if got[i].Status != status {
+				t.Errorf("got %q, want %q", got[0].Status, status)
+			}
+		}
+	})
+
+	t.Run("empty status", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("", "first")
+
+		err := tasks.Mark(1, "")
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+	})
+
+	t.Run("valid status", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("", "first")
+
+		err := tasks.Mark(1, "gettin' it")
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+	})
+
+	t.Run("update time", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("", "first")
+		tasks.Mark(1, "in-progress")
+
+		got := tasks.Get()
+
+		if got[0].UpdatedAt.Equal(got[0].CreatedAt) {
+			t.Error("time not updated")
+		}
+	})
+}

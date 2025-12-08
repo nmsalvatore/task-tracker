@@ -9,21 +9,26 @@ import (
 func main() {
 	err := run()
 	if err != nil {
-		log.Fatalf("run failed: %v", err)
+		log.Fatalf("failure: %v", err)
 	}
 }
 
 func run() error {
 	tasks := Tasks{}
 
-	err := tasks.Add("", "make dinner", "go on a walk")
+	err := tasks.Add("", "make dinner", "go on a walk", "drink whiskey")
 	if err != nil {
-		return fmt.Errorf("failed to add tasks: %v", err)
+		return fmt.Errorf("add tasks: %v", err)
 	}
 
 	err = tasks.Add("done", "drink coffee")
 	if err != nil {
-		return fmt.Errorf("failed to add tasks: %v", err)
+		return fmt.Errorf("add tasks: %v", err)
+	}
+
+	err = tasks.Mark(3, "in-progress")
+	if err != nil {
+		return fmt.Errorf("mark task status: %v", err)
 	}
 
 	tasks.List(os.Stdout)
