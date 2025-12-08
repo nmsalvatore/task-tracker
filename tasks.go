@@ -122,11 +122,12 @@ func (t *Tasks) Delete(ids ...int) error {
 	return nil
 }
 
-func (t *Tasks) Update(id int, description string) {
+func (t *Tasks) Update(id int, description string) error {
 	for i := range t.items {
 		if t.items[i].ID == id {
 			t.items[i].Description = description
-			break
+			return nil
 		}
 	}
+	return errors.New("task not found")
 }

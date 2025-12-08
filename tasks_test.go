@@ -304,4 +304,14 @@ func TestUpdate(t *testing.T) {
 			t.Errorf("got %q, want %q", got, "second")
 		}
 	})
+
+	t.Run("invalid id", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("", "first", "third")
+
+		err := tasks.Update(3, "second")
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+	})
 }
