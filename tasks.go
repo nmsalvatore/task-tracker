@@ -97,18 +97,19 @@ func (t *Tasks) Mark(id int, status string) error {
 }
 
 func (t *Tasks) Delete(ids ...int) error {
-	startLength := len(t.items)
+	var deleted int
 
 	for _, id := range ids {
 		for i := range t.items {
 			if t.items[i].ID == id {
 				t.items = slices.Delete(t.items, i, i+1)
+				deleted++
 				break
 			}
 		}
 	}
 
-	if len(t.items) == startLength {
+	if deleted == 0 {
 		return errors.New("task not found")
 	}
 
