@@ -85,8 +85,7 @@ func TestList(t *testing.T) {
 func TestAdd(t *testing.T) {
 	t.Run("single task", func(t *testing.T) {
 		tasks := Tasks{}
-		description := "drink coffee"
-		tasks.Add("", description)
+		tasks.Add("", "drink coffee")
 
 		got := tasks.Get()
 
@@ -97,8 +96,7 @@ func TestAdd(t *testing.T) {
 
 	t.Run("multiple tasks", func(t *testing.T) {
 		tasks := Tasks{}
-		descriptions := []string{"do a little dance", "make a little love", "get down tonight"}
-		tasks.Add("", descriptions...)
+		tasks.Add("", "do a little dance", "make a little love", "get down tonight")
 
 		got := tasks.Get()
 
@@ -119,6 +117,19 @@ func TestAdd(t *testing.T) {
 		}
 	})
 
+	t.Run("id after delete", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("", "one", "two", "three", "four")
+		tasks.Delete(2)
+		tasks.Add("", "five")
+
+		got := tasks.Get()
+
+		if got[3].ID != 5 {
+			t.Errorf("got %d, want %d", got[3].ID, 5)
+		}
+	})
+
 	t.Run("description", func(t *testing.T) {
 		tasks := Tasks{}
 		description := "drink coffee"
@@ -133,8 +144,7 @@ func TestAdd(t *testing.T) {
 
 	t.Run("status default", func(t *testing.T) {
 		tasks := Tasks{}
-		description := "go on a walk"
-		tasks.Add("", description)
+		tasks.Add("", "go on a walk")
 
 		got := tasks.Get()
 
@@ -146,9 +156,8 @@ func TestAdd(t *testing.T) {
 	t.Run("status specified", func(t *testing.T) {
 		tasks := Tasks{}
 		status := "in-progress"
-		description := "go on a walk"
+		tasks.Add(status, "go on a walk")
 
-		tasks.Add(status, description)
 		got := tasks.Get()
 
 		if got[0].Status != status {
@@ -158,10 +167,7 @@ func TestAdd(t *testing.T) {
 
 	t.Run("status rejected", func(t *testing.T) {
 		tasks := Tasks{}
-		status := "dude"
-		description := "go on a walk"
-
-		err := tasks.Add(status, description)
+		err := tasks.Add("dude", "go on a walk")
 		if err == nil {
 			t.Error("wanted error but didn't get one")
 		}

@@ -36,6 +36,11 @@ func run() error {
 		return fmt.Errorf("delete task: %v", err)
 	}
 
+	err = tasks.Add("todo", "go to work")
+	if err != nil {
+		return fmt.Errorf("add tasks: %v", err)
+	}
+
 	tasks.List(os.Stdout)
 	return nil
 }

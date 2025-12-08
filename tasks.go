@@ -62,7 +62,7 @@ func (t *Tasks) Add(status string, items ...string) error {
 	for _, item := range items {
 		now := time.Now()
 		task := Task{
-			ID:          len(t.items) + 1,
+			ID:          t.getMaxID() + 1,
 			Description: item,
 			Status:      status,
 			CreatedAt:   now,
@@ -72,6 +72,15 @@ func (t *Tasks) Add(status string, items ...string) error {
 	}
 
 	return nil
+}
+
+func (t *Tasks) getMaxID() (max int) {
+	for _, task := range t.items {
+		if task.ID > max {
+			max = task.ID
+		}
+	}
+	return
 }
 
 func (t *Tasks) Mark(id int, status string) error {
