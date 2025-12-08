@@ -101,13 +101,11 @@ func (t *Tasks) Mark(id int, status string) error {
 		}
 	}
 
-	// test this
 	return errors.New("task not found")
 }
 
 func (t *Tasks) Delete(ids ...int) error {
 	var deleted int
-
 	for _, id := range ids {
 		for i := range t.items {
 			if t.items[i].ID == id {
@@ -121,6 +119,14 @@ func (t *Tasks) Delete(ids ...int) error {
 	if deleted == 0 {
 		return errors.New("task not found")
 	}
-
 	return nil
+}
+
+func (t *Tasks) Update(id int, description string) {
+	for i := range t.items {
+		if t.items[i].ID == id {
+			t.items[i].Description = description
+			break
+		}
+	}
 }

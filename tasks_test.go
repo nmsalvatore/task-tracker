@@ -264,7 +264,7 @@ func TestDelete(t *testing.T) {
 		}
 
 		if len(got) == 3 {
-			t.Error("tasks length still 3")
+			t.Error("list length unchanged")
 		}
 	})
 
@@ -288,6 +288,20 @@ func TestDelete(t *testing.T) {
 		err := tasks.Delete(1)
 		if err == nil {
 			t.Error("wanted error, but didn't get one")
+		}
+	})
+}
+
+func TestUpdate(t *testing.T) {
+	t.Run("single task", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("", "first", "third")
+		tasks.Update(2, "second")
+
+		got := tasks.Get()
+
+		if got[1].Description != "second" {
+			t.Errorf("got %q, want %q", got, "second")
 		}
 	})
 }
