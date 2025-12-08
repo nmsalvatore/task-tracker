@@ -1,8 +1,10 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io"
+	"slices"
 	"strings"
 	"time"
 )
@@ -46,15 +48,26 @@ func (t *Tasks) List(writer io.Writer) {
 	fmt.Fprint(writer, message)
 }
 
-func (t *Tasks) Add(items ...string) {
+func (t *Tasks) Add(status string, items ...string) error {
+	if status == "" {
+		status = "todo"
+	}
+
+	options := []string{"todo", "in-progress", "done"}
+	if !slices.Contains(options, status) {
+		return errors.New("status invalid")
+	}
+
 	for _, item := range items {
 		task := Task{
 			ID:          len(t.items) + 1,
 			Description: item,
-			Status:      "todo",
+			Status:      status,
 			CreatedAt:   time.Now(),
 			UpdatedAt:   time.Now(),
 		}
 		t.items = append(t.items, task)
 	}
+
+	return nil
 }

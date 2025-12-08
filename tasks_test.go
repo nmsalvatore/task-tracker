@@ -21,7 +21,7 @@ func TestList(t *testing.T) {
 
 	t.Run("single task", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("drink coffee")
+		tasks.Add("", "drink coffee")
 
 		buffer := bytes.Buffer{}
 		tasks.List(&buffer)
@@ -36,8 +36,8 @@ func TestList(t *testing.T) {
 
 	t.Run("multiple tasks", func(t *testing.T) {
 		tasks := Tasks{}
-		items := []string{"do a little dance", "make a little love"}
-		tasks.Add(items...)
+		descriptions := []string{"do a little dance", "make a little love"}
+		tasks.Add("", descriptions...)
 
 		buffer := bytes.Buffer{}
 		tasks.List(&buffer)
@@ -49,13 +49,43 @@ func TestList(t *testing.T) {
 			t.Errorf("got %q, want %q", got, want)
 		}
 	})
+
+	t.Run("single task in progress", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("in-progress", "build task tracker")
+
+		buffer := bytes.Buffer{}
+		tasks.List(&buffer)
+
+		got := buffer.String()
+		want := "> build task tracker\n"
+
+		if got != want {
+			t.Errorf("got %q, want %q", got, want)
+		}
+	})
+
+	t.Run("single task done", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("done", "drink coffee")
+
+		buffer := bytes.Buffer{}
+		tasks.List(&buffer)
+
+		got := buffer.String()
+		want := "× drink coffee\n"
+
+		if got != want {
+			t.Errorf("got %q, want %q", got, want)
+		}
+	})
 }
 
 func TestAdd(t *testing.T) {
 	t.Run("single task", func(t *testing.T) {
 		tasks := Tasks{}
-		item := "drink coffee"
-		tasks.Add(item)
+		description := "drink coffee"
+		tasks.Add("", description)
 
 		got := tasks.Get()
 
@@ -66,8 +96,8 @@ func TestAdd(t *testing.T) {
 
 	t.Run("multiple tasks", func(t *testing.T) {
 		tasks := Tasks{}
-		items := []string{"do a little dance", "make a little love", "get down tonight"}
-		tasks.Add(items...)
+		descriptions := []string{"do a little dance", "make a little love", "get down tonight"}
+		tasks.Add("", descriptions...)
 
 		got := tasks.Get()
 
@@ -78,8 +108,8 @@ func TestAdd(t *testing.T) {
 
 	t.Run("id", func(t *testing.T) {
 		tasks := Tasks{}
-		item := "fly to the moon"
-		tasks.Add(item)
+		description := "fly to the moon"
+		tasks.Add("", description)
 
 		got := tasks.Get()
 
@@ -90,20 +120,20 @@ func TestAdd(t *testing.T) {
 
 	t.Run("description", func(t *testing.T) {
 		tasks := Tasks{}
-		item := "drink coffee"
-		tasks.Add(item)
+		description := "drink coffee"
+		tasks.Add("", description)
 
 		got := tasks.Get()
 
-		if got[0].Description != item {
-			t.Errorf("got %q, want %q", got[0].Description, item)
+		if got[0].Description != description {
+			t.Errorf("got %q, want %q", got[0].Description, description)
 		}
 	})
 
-	t.Run("status", func(t *testing.T) {
+	t.Run("status default", func(t *testing.T) {
 		tasks := Tasks{}
-		item := "go on a walk"
-		tasks.Add(item)
+		description := "go on a walk"
+		tasks.Add("", description)
 
 		got := tasks.Get()
 
@@ -112,10 +142,34 @@ func TestAdd(t *testing.T) {
 		}
 	})
 
+	t.Run("status specified", func(t *testing.T) {
+		tasks := Tasks{}
+		status := "in-progress"
+		description := "go on a walk"
+
+		tasks.Add(status, description)
+		got := tasks.Get()
+
+		if got[0].Status != status {
+			t.Errorf("got %q, want %q", got[0].Status, "in-progress")
+		}
+	})
+
+	t.Run("status rejected", func(t *testing.T) {
+		tasks := Tasks{}
+		status := "dude"
+		description := "go on a walk"
+
+		err := tasks.Add(status, description)
+		if err == nil {
+			t.Error("wanted error but didn't get one")
+		}
+	})
+
 	t.Run("created at", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("first")
-		tasks.Add("second")
+		tasks.Add("", "first")
+		tasks.Add("", "second")
 
 		got := tasks.Get()
 
