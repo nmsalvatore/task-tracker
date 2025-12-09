@@ -83,9 +83,7 @@ func (t *Tasks) getMaxID() (max int) {
 	return
 }
 
-func (t *Tasks) Mark(status string, id int) error {
-	// TODO: mark multiple tasks
-
+func (t *Tasks) Mark(status string, ids ...int) error {
 	if status == "" {
 		return errors.New("mark status empty")
 	}
@@ -95,15 +93,20 @@ func (t *Tasks) Mark(status string, id int) error {
 		return fmt.Errorf("invalid status: %q (must be todo, in-progress, or done)", status)
 	}
 
+	var updated int
 	for i := range t.items {
-		if t.items[i].ID == id {
+		if slices.Contains(ids, t.items[i].ID) {
 			t.items[i].Status = status
 			t.items[i].UpdatedAt = time.Now()
-			return nil
+			updated++
 		}
 	}
 
-	return errors.New("task not found")
+	if updated == 0 {
+		return errors.New("task not found")
+	}
+
+	return nil
 }
 
 func (t *Tasks) Delete(ids ...int) error {

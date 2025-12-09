@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"slices"
 	"testing"
 )
@@ -213,6 +214,23 @@ func TestMark(t *testing.T) {
 		got := tasks.Get()
 
 		for i, status := range []string{"in-progress", "done", "todo"} {
+			if got[i].Status != status {
+				t.Errorf("got %q, want %q", got[i].Status, status)
+			}
+		}
+	})
+
+	t.Run("multiple tasks", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("", "first", "second", "third")
+
+		status := "in-progress"
+		tasks.Mark(status, 1, 2)
+
+		got := tasks.Get()
+
+		for i := range 2 {
+			fmt.Println(got[i].Description)
 			if got[i].Status != status {
 				t.Errorf("got %q, want %q", got[i].Status, status)
 			}
