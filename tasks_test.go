@@ -10,7 +10,7 @@ func TestList(t *testing.T) {
 	t.Run("no tasks message", func(t *testing.T) {
 		tasks := Tasks{}
 		buffer := bytes.Buffer{}
-		tasks.List(&buffer)
+		tasks.List(&buffer, "")
 
 		got := buffer.String()
 		want := "no tasks\n"
@@ -25,7 +25,7 @@ func TestList(t *testing.T) {
 		tasks.Add("", "drink coffee")
 
 		buffer := bytes.Buffer{}
-		tasks.List(&buffer)
+		tasks.List(&buffer, "")
 
 		got := buffer.String()
 		want := "• 1: drink coffee\n"
@@ -41,7 +41,7 @@ func TestList(t *testing.T) {
 		tasks.Add("", descriptions...)
 
 		buffer := bytes.Buffer{}
-		tasks.List(&buffer)
+		tasks.List(&buffer, "")
 
 		got := buffer.String()
 		want := "• 1: do a little dance\n• 2: make a little love\n"
@@ -56,7 +56,7 @@ func TestList(t *testing.T) {
 		tasks.Add("in-progress", "build task tracker")
 
 		buffer := bytes.Buffer{}
-		tasks.List(&buffer)
+		tasks.List(&buffer, "")
 
 		got := buffer.String()
 		want := "> 1: build task tracker\n"
@@ -71,10 +71,26 @@ func TestList(t *testing.T) {
 		tasks.Add("done", "drink coffee")
 
 		buffer := bytes.Buffer{}
-		tasks.List(&buffer)
+		tasks.List(&buffer, "")
 
 		got := buffer.String()
 		want := "× 1: drink coffee\n"
+
+		if got != want {
+			t.Errorf("got %q, want %q", got, want)
+		}
+	})
+
+	t.Run("by status, in progress", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("", "first", "second", "third", "fourth")
+		tasks.Mark("done", 3, 4)
+
+		buffer := bytes.Buffer{}
+		tasks.List(&buffer, "done")
+
+		got := buffer.String()
+		want := "× 3: third\n× 4: fourth\n"
 
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)

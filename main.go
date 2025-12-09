@@ -41,6 +41,6 @@ func run() error {
 		return fmt.Errorf("add tasks: %v", err)
 	}
 
-	tasks.List(os.Stdout)
+	tasks.List(os.Stdout, "")
 	return nil
 }

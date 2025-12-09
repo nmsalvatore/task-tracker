@@ -25,7 +25,13 @@ func (t *Tasks) Get() []Task {
 	return t.items
 }
 
-func (t *Tasks) List(writer io.Writer) {
+func (t *Tasks) List(writer io.Writer, status string) {
+	// TODO: pass "by status, done" test,
+	// 		 write tests got Get to filter by status, then put status in Get(status)
+	// 		 then update all Get calls to take an empty string or a status
+	//
+	// TODO: check for invalid status
+
 	tasks := t.Get()
 	if len(tasks) == 0 {
 		fmt.Fprintln(writer, "no tasks")
