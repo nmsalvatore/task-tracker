@@ -12,32 +12,34 @@ Clone this repo and `cd` into the project's root directory. Build the binary wit
 # Add tasks
 task add "Go to the moon"
 task add "Do a little dance" "Make a little love" "Get down tonight"
-task add "Drink coffee" --done
-task add "Build a task tracker" --in-progress
-task add "Get a real job" --todo
+task add "Drink coffee" --mark done
+task add "Build a task tracker" --mark in-progress
+task add "Get a real job" --mark todo
 
 # Update task
 task update 1 "Go to Discovery Zone"
 
 # Delete task(s)
 task delete 1
+task delete 1 2 3
 
 # Clear tasks
 task clear
-task clear --done 
-task clear --in-progress
-task clear --todo
+task clear done 
+task clear in-progress
+task clear todo
 
 # Mark task status
-task mark 5 --done
-task mark 6 --in-progress
-task mark 5 --todo
+task mark 5 done
+task mark 3 4 5 done
+task mark 6 in-progress
+task mark 5 todo
 
 # List tasks
 task list
-task list --done
-task list --in-progress
-task list --todo
+task list done
+task list in-progress
+task list todo
 
 # Helpers
 task version
