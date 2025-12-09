@@ -5,7 +5,7 @@
 - Add (DONE)
 - Update (DONE)
 - Delete (DONE)
-- Mark (IN PROGRESS)
+- Mark (DONE)
 - List (IN PROGRESS)
 - Clear (TODO)
 
