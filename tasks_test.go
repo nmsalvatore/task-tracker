@@ -201,14 +201,14 @@ func TestAdd(t *testing.T) {
 }
 
 func TestMark(t *testing.T) {
-	t.Run("status update", func(t *testing.T) {
+	t.Run("single task", func(t *testing.T) {
 		tasks := Tasks{}
 		tasks.Add("", "first", "second")
 		tasks.Add("done", "third")
 
-		tasks.Mark(1, "in-progress")
-		tasks.Mark(2, "done")
-		tasks.Mark(3, "todo")
+		tasks.Mark("in-progress", 1)
+		tasks.Mark("done", 2)
+		tasks.Mark("todo", 3)
 
 		got := tasks.Get()
 
@@ -223,7 +223,7 @@ func TestMark(t *testing.T) {
 		tasks := Tasks{}
 		tasks.Add("", "first")
 
-		err := tasks.Mark(1, "")
+		err := tasks.Mark("", 1)
 		if err == nil {
 			t.Error("wanted error, but didn't get one")
 		}
@@ -233,7 +233,7 @@ func TestMark(t *testing.T) {
 		tasks := Tasks{}
 		tasks.Add("", "first")
 
-		err := tasks.Mark(1, "gettin' it")
+		err := tasks.Mark("gettin' it", 1)
 		if err == nil {
 			t.Error("wanted error, but didn't get one")
 		}
@@ -242,7 +242,7 @@ func TestMark(t *testing.T) {
 	t.Run("update time", func(t *testing.T) {
 		tasks := Tasks{}
 		tasks.Add("", "first")
-		tasks.Mark(1, "in-progress")
+		tasks.Mark("in-progress", 1)
 
 		got := tasks.Get()
 
@@ -255,7 +255,7 @@ func TestMark(t *testing.T) {
 		tasks := Tasks{}
 		tasks.Add("", "sip tea")
 
-		err := tasks.Mark(2, "in-progress")
+		err := tasks.Mark("in-progress", 2)
 		if err == nil {
 			t.Error("wanted error, but didn't get one")
 		}

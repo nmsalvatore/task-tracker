@@ -83,7 +83,7 @@ func (t *Tasks) getMaxID() (max int) {
 	return
 }
 
-func (t *Tasks) Mark(id int, status string) error {
+func (t *Tasks) Mark(status string, id int) error {
 	// TODO: mark multiple tasks
 
 	if status == "" {

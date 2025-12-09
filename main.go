@@ -16,7 +16,7 @@ func main() {
 func run() error {
 	tasks := Tasks{}
 
-	err := tasks.Add("", "make dinner", "go on a walk", "something unimportant", "drink whiskey")
+	err := tasks.Add("", "update fastrak", "go on a walk", "something unimportant", "drink whiskey")
 	if err != nil {
 		return fmt.Errorf("add tasks: %v", err)
 	}
@@ -26,7 +26,7 @@ func run() error {
 		return fmt.Errorf("add tasks: %v", err)
 	}
 
-	err = tasks.Mark(4, "in-progress")
+	err = tasks.Mark("done", 4)
 	if err != nil {
 		return fmt.Errorf("mark task status: %v", err)
 	}
@@ -36,7 +36,7 @@ func run() error {
 		return fmt.Errorf("delete task: %v", err)
 	}
 
-	err = tasks.Add("todo", "go to work")
+	err = tasks.Add("done", "go to work")
 	if err != nil {
 		return fmt.Errorf("add tasks: %v", err)
 	}
