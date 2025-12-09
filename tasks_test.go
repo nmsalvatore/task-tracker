@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"slices"
 	"testing"
 )
@@ -230,7 +229,6 @@ func TestMark(t *testing.T) {
 		got := tasks.Get()
 
 		for i := range 2 {
-			fmt.Println(got[i].Description)
 			if got[i].Status != status {
 				t.Errorf("got %q, want %q", got[i].Status, status)
 			}
