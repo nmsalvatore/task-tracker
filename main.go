@@ -26,7 +26,7 @@ func run() error {
 		return fmt.Errorf("add tasks: %v", err)
 	}
 
-	err = tasks.Mark("done", 4)
+	err = tasks.Mark("done", 2, 4)
 	if err != nil {
 		return fmt.Errorf("mark task status: %v", err)
 	}
