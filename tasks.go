@@ -19,26 +19,6 @@ type Tasks struct {
 	items []Task
 }
 
-func (t *Tasks) Get() []Task {
-	return t.items
-}
-
-func (t *Tasks) GetByStatus(status string) ([]Task, error) {
-	err := t.validateStatus(status)
-	if err != nil {
-		return nil, fmt.Errorf("couldn't get tasks: %v", err)
-	}
-
-	var tasks []Task
-	for _, item := range t.items {
-		if item.Status == status {
-			tasks = append(tasks, item)
-		}
-	}
-
-	return tasks, nil
-}
-
 func (t *Tasks) Add(status string, items ...string) error {
 	if status == "" {
 		status = "todo"
@@ -75,6 +55,26 @@ func (t *Tasks) Delete(ids ...int) error {
 		return errors.New("task not found")
 	}
 	return nil
+}
+
+func (t *Tasks) Get() []Task {
+	return t.items
+}
+
+func (t *Tasks) GetByStatus(status string) ([]Task, error) {
+	err := t.validateStatus(status)
+	if err != nil {
+		return nil, fmt.Errorf("couldn't get tasks: %v", err)
+	}
+
+	var tasks []Task
+	for _, item := range t.items {
+		if item.Status == status {
+			tasks = append(tasks, item)
+		}
+	}
+
+	return tasks, nil
 }
 
 func (t *Tasks) Mark(status string, ids ...int) error {
