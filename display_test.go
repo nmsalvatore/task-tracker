@@ -8,8 +8,8 @@ import (
 func TestPrintTasks(t *testing.T) {
 	t.Run("no tasks message", func(t *testing.T) {
 		tasks := Tasks{}
-		buffer := bytes.Buffer{}
 
+		buffer := bytes.Buffer{}
 		PrintTasks(&buffer, tasks.Get())
 
 		got := buffer.String()
@@ -23,8 +23,8 @@ func TestPrintTasks(t *testing.T) {
 	t.Run("single task", func(t *testing.T) {
 		tasks := Tasks{}
 		tasks.Add("", "drink coffee")
-		buffer := bytes.Buffer{}
 
+		buffer := bytes.Buffer{}
 		PrintTasks(&buffer, tasks.Get())
 
 		got := buffer.String()
@@ -39,8 +39,8 @@ func TestPrintTasks(t *testing.T) {
 		tasks := Tasks{}
 		descriptions := []string{"do a little dance", "make a little love"}
 		tasks.Add("", descriptions...)
-		buffer := bytes.Buffer{}
 
+		buffer := bytes.Buffer{}
 		PrintTasks(&buffer, tasks.Get())
 
 		got := buffer.String()
@@ -54,8 +54,8 @@ func TestPrintTasks(t *testing.T) {
 	t.Run("single task in progress", func(t *testing.T) {
 		tasks := Tasks{}
 		tasks.Add("in-progress", "build task tracker")
-		buffer := bytes.Buffer{}
 
+		buffer := bytes.Buffer{}
 		PrintTasks(&buffer, tasks.Get())
 
 		got := buffer.String()
@@ -69,12 +69,29 @@ func TestPrintTasks(t *testing.T) {
 	t.Run("single task done", func(t *testing.T) {
 		tasks := Tasks{}
 		tasks.Add("done", "drink coffee")
-		buffer := bytes.Buffer{}
 
+		buffer := bytes.Buffer{}
 		PrintTasks(&buffer, tasks.Get())
 
 		got := buffer.String()
 		want := "× 1: drink coffee\n"
+
+		if got != want {
+			t.Errorf("got %q, want %q", got, want)
+		}
+	})
+
+	t.Run("by status", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("", "first", "second", "third")
+		tasks.Mark("done", 2)
+
+		buffer := bytes.Buffer{}
+		items, _ := tasks.GetByStatus("done")
+		PrintTasks(&buffer, items)
+
+		got := buffer.String()
+		want := "× 2: second\n"
 
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)
