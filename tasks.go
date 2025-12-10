@@ -23,14 +23,30 @@ func (t *Tasks) Get() []Task {
 	return t.items
 }
 
+func (t *Tasks) GetByStatus(status string) ([]Task, error) {
+	err := t.validateStatus(status)
+	if err != nil {
+		return nil, fmt.Errorf("couldn't get tasks: %v", err)
+	}
+
+	var tasks []Task
+	for _, item := range t.items {
+		if item.Status == status {
+			tasks = append(tasks, item)
+		}
+	}
+
+	return tasks, nil
+}
+
 func (t *Tasks) Add(status string, items ...string) error {
 	if status == "" {
 		status = "todo"
 	}
 
-	options := []string{"todo", "in-progress", "done"}
-	if !slices.Contains(options, status) {
-		return fmt.Errorf("invalid status: %q (must be todo, in-progress, or done)", status)
+	err := t.validateStatus(status)
+	if err != nil {
+		return fmt.Errorf("couldn't add task: %v", err)
 	}
 
 	for _, item := range items {
@@ -105,4 +121,12 @@ func (t *Tasks) getMaxID() (max int) {
 		}
 	}
 	return
+}
+
+func (t *Tasks) validateStatus(status string) error {
+	valid := []string{"todo", "in-progress", "done"}
+	if !slices.Contains(valid, status) {
+		return fmt.Errorf("invalid status: %q (must be todo, in-progress, or done)", status)
+	}
+	return nil
 }
