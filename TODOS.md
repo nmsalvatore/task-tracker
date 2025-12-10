@@ -1,15 +1,25 @@
 # Todos
 
-## Business Logic
+## Business Logic (tasks.go)
 
 - Add (DONE)
-- Update (DONE)
+- Get (DONE)
+- GetByStatus (DONE)
 - Delete (DONE)
 - Mark (DONE)
-- List (IN PROGRESS)
+- Update (DONE)
 - Clear (TODO)
 
-## CLI
+### Tests
+
+- getMaxID (TODO)
+- validateStatus (TODO)
+
+## Presentation Logic (display.go)
+
+- PrintTasks (IN PROGRESS)
+
+## CLI Layer (main.go)
 
 - Add
 - Update
