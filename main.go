@@ -21,6 +21,6 @@ func run() error {
 		return fmt.Errorf("add tasks: %v", err)
 	}
 
-	PrintTasks(os.Stdout, tasks.items)
+	PrintTasks(os.Stdout, tasks.Get())
 	return nil
 }
