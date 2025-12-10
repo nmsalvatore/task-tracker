@@ -3,9 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
-	"io"
 	"slices"
-	"strings"
 	"time"
 )
 
@@ -23,36 +21,6 @@ type Tasks struct {
 
 func (t *Tasks) Get() []Task {
 	return t.items
-}
-
-func (t *Tasks) List(writer io.Writer, status string) {
-	// TODO: pass "by status, done" test,
-	// 		 write tests got Get to filter by status, then put status in Get(status)
-	// 		 then update all Get calls to take an empty string or a status
-	//
-	// TODO: check for invalid status
-
-	tasks := t.Get()
-	if len(tasks) == 0 {
-		fmt.Fprintln(writer, "no tasks")
-		return
-	}
-
-	message := &strings.Builder{}
-	for _, task := range tasks {
-		switch task.Status {
-		case "todo":
-			message.WriteString("• ")
-		case "in-progress":
-			message.WriteString("> ")
-		case "done":
-			message.WriteString("× ")
-		}
-		item := fmt.Sprintf("%d: %s\n", task.ID, task.Description)
-		message.WriteString(item)
-	}
-
-	fmt.Fprint(writer, message)
 }
 
 func (t *Tasks) Add(status string, items ...string) error {
@@ -80,13 +48,17 @@ func (t *Tasks) Add(status string, items ...string) error {
 	return nil
 }
 
-func (t *Tasks) getMaxID() (max int) {
-	for _, task := range t.items {
-		if task.ID > max {
-			max = task.ID
-		}
+func (t *Tasks) Delete(ids ...int) error {
+	startLen := len(t.items)
+
+	t.items = slices.DeleteFunc(t.items, func(task Task) bool {
+		return slices.Contains(ids, task.ID)
+	})
+
+	if len(t.items) == startLen {
+		return errors.New("task not found")
 	}
-	return
+	return nil
 }
 
 func (t *Tasks) Mark(status string, ids ...int) error {
@@ -115,19 +87,6 @@ func (t *Tasks) Mark(status string, ids ...int) error {
 	return nil
 }
 
-func (t *Tasks) Delete(ids ...int) error {
-	startLen := len(t.items)
-
-	t.items = slices.DeleteFunc(t.items, func(task Task) bool {
-		return slices.Contains(ids, task.ID)
-	})
-
-	if len(t.items) == startLen {
-		return errors.New("task not found")
-	}
-	return nil
-}
-
 func (t *Tasks) Update(id int, description string) error {
 	for i := range t.items {
 		if t.items[i].ID == id {
@@ -137,4 +96,13 @@ func (t *Tasks) Update(id int, description string) error {
 		}
 	}
 	return errors.New("task not found")
+}
+
+func (t *Tasks) getMaxID() (max int) {
+	for _, task := range t.items {
+		if task.ID > max {
+			max = task.ID
+		}
+	}
+	return
 }
