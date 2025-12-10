@@ -17,7 +17,7 @@
 
 ## Presentation Logic (display.go)
 
-- PrintTasks (IN PROGRESS)
+- PrintTasks (DONE)
 
 ## CLI Layer (main.go)
 
