@@ -7,12 +7,6 @@ import (
 )
 
 func PrintTasks(writer io.Writer, tasks []Task) {
-	// TODO: pass "by status, done" test,
-	// 		 write tests got Get to filter by status, then put status in Get(status)
-	// 		 then update all Get calls to take an empty string or a status
-	//
-	// TODO: check for invalid status
-
 	if len(tasks) == 0 {
 		fmt.Fprintln(writer, "no tasks")
 		return
