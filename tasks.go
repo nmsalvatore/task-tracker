@@ -82,9 +82,9 @@ func (t *Tasks) Mark(status string, ids ...int) error {
 		return errors.New("mark status empty")
 	}
 
-	options := []string{"todo", "in-progress", "done"}
-	if !slices.Contains(options, status) {
-		return fmt.Errorf("invalid status: %q (must be todo, in-progress, or done)", status)
+	err := t.validateStatus(status)
+	if err != nil {
+		return fmt.Errorf("couldn't mark task: %v", err)
 	}
 
 	var updated int
