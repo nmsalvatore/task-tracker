@@ -123,6 +123,62 @@ func TestAdd(t *testing.T) {
 	})
 }
 
+func TestClear(t *testing.T) {
+	tasks := Tasks{}
+	tasks.Add("", "first", "second", "third")
+	tasks.Add("done", "fourth", "fifth")
+	tasks.Clear()
+
+	got := tasks.Get()
+
+	if len(got) != 0 {
+		t.Errorf("got length %d, want 0", len(got))
+	}
+}
+
+func TestDelete(t *testing.T) {
+	t.Run("single task", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("", "first", "second", "third")
+		tasks.Delete(2)
+
+		got := tasks.Get()
+
+		for _, task := range got {
+			if task.Description == "second" {
+				t.Error("task not deleted")
+			}
+		}
+
+		if len(got) == 3 {
+			t.Error("list length unchanged")
+		}
+	})
+
+	t.Run("multiple tasks", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("", "first", "second", "third")
+		tasks.Delete(2, 3)
+
+		got := tasks.Get()
+
+		deleted := []string{"second", "third"}
+		for _, task := range got {
+			if slices.Contains(deleted, task.Description) {
+				t.Errorf("%q not deleted", task.Description)
+			}
+		}
+	})
+
+	t.Run("invalid id", func(t *testing.T) {
+		tasks := Tasks{}
+		err := tasks.Delete(1)
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+	})
+}
+
 func TestGetByStatus(t *testing.T) {
 	t.Run("done", func(t *testing.T) {
 		tasks := Tasks{}
@@ -190,49 +246,6 @@ func TestGetByStatus(t *testing.T) {
 
 		if err == nil {
 			t.Errorf("wanted error, but didn't get one")
-		}
-	})
-}
-
-func TestDelete(t *testing.T) {
-	t.Run("single task", func(t *testing.T) {
-		tasks := Tasks{}
-		tasks.Add("", "first", "second", "third")
-		tasks.Delete(2)
-
-		got := tasks.Get()
-
-		for _, task := range got {
-			if task.Description == "second" {
-				t.Error("task not deleted")
-			}
-		}
-
-		if len(got) == 3 {
-			t.Error("list length unchanged")
-		}
-	})
-
-	t.Run("multiple tasks", func(t *testing.T) {
-		tasks := Tasks{}
-		tasks.Add("", "first", "second", "third")
-		tasks.Delete(2, 3)
-
-		got := tasks.Get()
-
-		deleted := []string{"second", "third"}
-		for _, task := range got {
-			if slices.Contains(deleted, task.Description) {
-				t.Errorf("%q not deleted", task.Description)
-			}
-		}
-	})
-
-	t.Run("invalid id", func(t *testing.T) {
-		tasks := Tasks{}
-		err := tasks.Delete(1)
-		if err == nil {
-			t.Error("wanted error, but didn't get one")
 		}
 	})
 }

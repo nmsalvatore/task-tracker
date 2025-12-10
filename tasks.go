@@ -44,6 +44,10 @@ func (t *Tasks) Add(status string, items ...string) error {
 	return nil
 }
 
+func (t *Tasks) Clear() {
+	t.items = slices.Delete(t.items, 0, len(t.items))
+}
+
 func (t *Tasks) Delete(ids ...int) error {
 	startLen := len(t.items)
 
