@@ -45,7 +45,20 @@ func (t *Tasks) Add(status string, items ...string) error {
 }
 
 func (t *Tasks) Clear() {
-	t.items = slices.Delete(t.items, 0, len(t.items))
+	t.items = []Task{}
+}
+
+func (t *Tasks) ClearByStatus(status string) error {
+	err := t.validateStatus(status)
+	if err != nil {
+		return fmt.Errorf("couldn't clear tasks: %v", err)
+	}
+
+	t.items = slices.DeleteFunc(t.items, func(task Task) bool {
+		return task.Status == status
+	})
+
+	return nil
 }
 
 func (t *Tasks) Delete(ids ...int) error {

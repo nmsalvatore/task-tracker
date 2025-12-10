@@ -136,6 +136,39 @@ func TestClear(t *testing.T) {
 	}
 }
 
+func TestClearByStatus(t *testing.T) {
+	t.Run("valid status", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("", "first", "second", "third")
+		tasks.Add("done", "fourth", "fifth")
+		tasks.ClearByStatus("done")
+
+		got := tasks.Get()
+
+		if len(got) != 3 {
+			t.Fatalf("got length %d, want 3", len(got))
+		}
+
+		want := []string{"first", "second", "third"}
+		for i, task := range got {
+			if task.Description != want[i] {
+				t.Errorf("got %q, want %q", task.Description, want[i])
+			}
+		}
+	})
+
+	t.Run("invalid status", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("", "first", "second", "third")
+		tasks.Add("done", "fourth", "fifth")
+
+		err := tasks.ClearByStatus("beans")
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+	})
+}
+
 func TestDelete(t *testing.T) {
 	t.Run("single task", func(t *testing.T) {
 		tasks := Tasks{}

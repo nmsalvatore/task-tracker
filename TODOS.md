@@ -2,30 +2,25 @@
 
 ## Business Logic (tasks.go)
 
-- Add (DONE)
-- Get (DONE)
-- GetByStatus (DONE)
-- Delete (DONE)
-- Mark (DONE)
-- Update (DONE)
-- Clear (TODO)
-
-### Tests
-
-- getMaxID (TODO)
-- validateStatus (TODO)
+- [x] Add
+- [x] Get
+- [x] GetByStatus
+- [x] Delete
+- [x] Mark
+- [x] Update
+- [ ] Clear
 
 ## Presentation Logic (display.go)
 
-- PrintTasks (DONE)
+- [x] PrintTasks
 
 ## CLI Layer (main.go)
 
-- Add
-- Update
-- Delete
-- Mark
-- List
-- Clear
-- Help
-- Version
+- [ ] Add
+- [ ] Update
+- [ ] Delete
+- [ ] Mark
+- [ ] List
+- [ ] Clear
+- [ ] Help
+- [ ] Version
