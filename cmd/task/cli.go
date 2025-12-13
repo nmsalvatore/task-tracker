@@ -31,6 +31,11 @@ func (c *CLI) Add(writer io.Writer, args []string) error {
 		return err
 	}
 
+	err = c.tasks.validateStatus(status)
+	if err != nil {
+		return err
+	}
+
 	err = c.tasks.Add(status, descriptions...)
 	if err != nil {
 		return err
@@ -66,6 +71,8 @@ func (c *CLI) Clear(writer io.Writer, args []string) error {
 }
 
 func parseAddArgs(args []string) (status string, descriptions []string, err error) {
+	status = "todo"
+
 	for i := 0; i < len(args); i++ {
 		if args[i] == "--status" {
 			if i+1 >= len(args) {
@@ -77,6 +84,7 @@ func parseAddArgs(args []string) (status string, descriptions []string, err erro
 			descriptions = append(descriptions, args[i])
 		}
 	}
+
 	return
 }
 
