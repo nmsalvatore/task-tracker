@@ -29,19 +29,19 @@ func (c *CLI) Add(writer io.Writer, args []string) error {
 	return nil
 }
 
-func (c *CLI) Clear(args []string) error {
+func (c *CLI) Clear(writer io.Writer, args []string) error {
 	if len(args) == 0 {
 		c.tasks.Clear()
-		fmt.Println("Cleared all tasks")
+		fmt.Fprintln(writer, "Cleared all tasks")
 		return nil
 	}
 
 	status := args[0]
 	err := c.tasks.ClearByStatus(status)
 	if err != nil {
-		return fmt.Errorf("clear task by status: %v", err)
+		return err
 	}
 
-	fmt.Printf("Cleared all tasks with status %q\n", status)
+	fmt.Fprintf(writer, "Cleared all tasks with status %q\n", status)
 	return nil
 }

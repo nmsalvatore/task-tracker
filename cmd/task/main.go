@@ -28,7 +28,7 @@ func run() error {
 	case "add":
 		err = cli.Add(os.Stdout, args)
 	case "clear":
-		err = cli.Clear(args)
+		err = cli.Clear(os.Stdout, args)
 	case "delete":
 		ids, err := argsToInts(os.Args[2:])
 		if err != nil {

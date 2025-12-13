@@ -10,26 +10,29 @@ const filename = "test.json"
 
 func TestCLI_Add(t *testing.T) {
 	t.Run("single task", func(t *testing.T) {
-		want := []string{"one"}
-
 		cli := NewCLI(filename)
-		cli.Add(io.Discard, want)
+
+		args := []string{"one"}
+		cli.Add(io.Discard, args)
 
 		got := cli.tasks.Get()
 		if len(got) != 1 {
 			t.Fatalf("got %d tasks, wanted 1", len(got))
 		}
 
-		if got[0].Description != want[0] {
-			t.Errorf("got %q, wanted %q", got[0].Description, want)
+		if got[0].Description != args[0] {
+			t.Errorf("got %q, wanted %q", got[0].Description, args)
 		}
 	})
 
 	t.Run("multiple tasks", func(t *testing.T) {
-		want := []string{"one", "two", "three"}
-
 		cli := NewCLI(filename)
-		cli.Add(io.Discard, want)
+
+		args := []string{"one", "two", "three"}
+		err := cli.Add(io.Discard, args)
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		got := cli.tasks.Get()
 		if len(got) != 3 {
@@ -37,16 +40,20 @@ func TestCLI_Add(t *testing.T) {
 		}
 
 		for i := range got {
-			if want[i] != got[i].Description {
-				t.Errorf("got %q, wanted %q", got[i].Description, want[i])
+			if got[i].Description != args[i] {
+				t.Errorf("got %q, wanted %q", got[i].Description, args[i])
 			}
 		}
 	})
 
 	t.Run("single task message", func(t *testing.T) {
 		cli := NewCLI(filename)
+
 		buf := bytes.Buffer{}
-		cli.Add(&buf, []string{"one"})
+		err := cli.Add(&buf, []string{"one"})
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		got := buf.String()
 		want := "Added task \"one\"\n"
@@ -58,14 +65,119 @@ func TestCLI_Add(t *testing.T) {
 
 	t.Run("multiple tasks message", func(t *testing.T) {
 		cli := NewCLI(filename)
+
 		buf := bytes.Buffer{}
-		cli.Add(&buf, []string{"one", "two"})
+		err := cli.Add(&buf, []string{"one", "two"})
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		got := buf.String()
 		want := "Added task \"one\"\nAdded task \"two\"\n"
 
 		if got != want {
 			t.Errorf("got %q, wanted %q", got, want)
+		}
+	})
+}
+
+func TestCLI_Clear(t *testing.T) {
+	t.Run("all", func(t *testing.T) {
+		cli := NewCLI(filename)
+
+		err := cli.tasks.Add("", "one", "two", "three")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = cli.Clear(io.Discard, []string{})
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got := cli.tasks.Get()
+		if len(got) != 0 {
+			t.Errorf("got %d tasks, wanted 0", len(got))
+		}
+	})
+
+	t.Run("by status", func(t *testing.T) {
+		cli := NewCLI(filename)
+
+		err := cli.tasks.Add("", "one", "two", "three", "four")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = cli.tasks.Mark("done", 1, 2)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = cli.Clear(io.Discard, []string{"done"})
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got := cli.tasks.Get()
+		if len(got) != 2 {
+			t.Errorf("got %d tasks, wanted 2", len(got))
+		}
+	})
+
+	t.Run("message for all", func(t *testing.T) {
+		cli := NewCLI(filename)
+
+		err := cli.tasks.Add("", "one", "two")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		buf := bytes.Buffer{}
+		err = cli.Clear(&buf, []string{})
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got := buf.String()
+		want := "Cleared all tasks\n"
+		if got != want {
+			t.Errorf("got %q, wanted %q", got, want)
+		}
+	})
+
+	t.Run("message for all", func(t *testing.T) {
+		cli := NewCLI(filename)
+
+		err := cli.tasks.Add("", "one", "two", "three", "four")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = cli.tasks.Mark("done", 1, 2)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		buf := bytes.Buffer{}
+		err = cli.Clear(&buf, []string{"done"})
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got := buf.String()
+		want := "Cleared all tasks with status \"done\"\n"
+		if got != want {
+			t.Errorf("got %q, wanted %q", got, want)
+		}
+	})
+
+	t.Run("invalid status", func(t *testing.T) {
+		cli := NewCLI(filename)
+
+		err := cli.tasks.Add("zero", "one", "two", "three", "four")
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
 		}
 	})
 }
