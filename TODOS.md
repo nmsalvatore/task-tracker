@@ -12,17 +12,16 @@
 
 ## Presentation Logic (display.go)
 
-- [x] ListTasks
-- [ ] ListTasksByStatus
+- [x] PrintTasks
 
 ## CLI Layer (cli.go)
 
 - [ ] Add (IN PROGRESS; NEEDS MARK FLAG)
-- [ ] Update
-- [ ] Delete
-- [ ] Mark
-- [ ] List
 - [x] Clear
+- [ ] Delete
+- [ ] List
+- [ ] Mark
+- [ ] Update
 - [ ] Help
 - [ ] Version
 
