@@ -79,6 +79,67 @@ func TestCLI_Add(t *testing.T) {
 			t.Errorf("got %q, want %q", got, want)
 		}
 	})
+
+	t.Run("single task with status flag before tasks", func(t *testing.T) {
+		cli := NewCLI(filename)
+
+		status := "in-progress"
+		args := []string{"--status", status, "drink coffee"}
+
+		err := cli.Add(io.Discard, args)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got := cli.tasks.Get()
+		if got[0].Status != status {
+			t.Errorf("got %q, want %q", got[0].Status, status)
+		}
+	})
+
+	t.Run("single task with status flag after tasks", func(t *testing.T) {
+		cli := NewCLI(filename)
+
+		status := "in-progress"
+		args := []string{"drink coffee", "--status", status}
+
+		err := cli.Add(io.Discard, args)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got := cli.tasks.Get()
+		if len(got) != 1 {
+			t.Fatalf("got length %d, want 1", len(got))
+		}
+
+		if got[0].Status != status {
+			t.Errorf("got %q, want %q", got[0].Status, status)
+		}
+	})
+
+	t.Run("status flag with invalid value", func(t *testing.T) {
+		cli := NewCLI(filename)
+
+		status := "didit"
+		args := []string{"drink coffee", "--status", status}
+
+		err := cli.Add(io.Discard, args)
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+	})
+
+	t.Run("status flag as last arg, no value", func(t *testing.T) {
+		cli := NewCLI(filename)
+
+		args := []string{"drink coffee", "--status"}
+
+		err := cli.Add(io.Discard, args)
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+	})
 }
 
 func TestCLI_Clear(t *testing.T) {

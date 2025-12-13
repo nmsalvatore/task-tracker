@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io"
 )
@@ -18,14 +19,30 @@ func NewCLI(filename string) *CLI {
 }
 
 func (c *CLI) Add(writer io.Writer, args []string) error {
-	err := c.tasks.Add("", args...)
+	var descriptions []string
+	var status string
+
+	for i := 0; i < len(args); i++ {
+		if args[i] == "--status" {
+			if i+1 >= len(args) {
+				return errors.New("--status flag requires a value")
+			}
+			status = args[i+1]
+			i++
+		} else {
+			descriptions = append(descriptions, args[i])
+		}
+	}
+
+	err := c.tasks.Add(status, descriptions...)
 	if err != nil {
 		return err
 	}
 
-	for _, task := range args {
+	for _, task := range descriptions {
 		fmt.Fprintf(writer, "Added task %q\n", task)
 	}
+
 	return nil
 }
 
