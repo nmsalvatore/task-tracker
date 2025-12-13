@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func ListTasks(writer io.Writer, tasks []Task) {
+func PrintTasks(writer io.Writer, tasks []Task) {
 	if len(tasks) == 0 {
 		fmt.Fprintln(writer, "Task list is empty")
 		return
