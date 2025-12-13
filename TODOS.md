@@ -8,7 +8,7 @@
 - [x] Delete
 - [x] Mark
 - [x] Update
-- [ ] Clear
+- [x] Clear
 
 ## Presentation Logic (display.go)
 
