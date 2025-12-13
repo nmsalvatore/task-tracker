@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 	"slices"
 	"time"
 )
@@ -94,6 +96,23 @@ func (t *Tasks) GetByStatus(status string) ([]Task, error) {
 	return tasks, nil
 }
 
+func (t *Tasks) Load(filename string) error {
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil
+		}
+		return fmt.Errorf("read data file: %v", err)
+	}
+
+	err = json.Unmarshal(data, &t.items)
+	if err != nil {
+		return fmt.Errorf("decode json file: %v", err)
+	}
+
+	return nil
+}
+
 func (t *Tasks) Mark(status string, ids ...int) error {
 	if status == "" {
 		return errors.New("mark status empty")
@@ -101,7 +120,7 @@ func (t *Tasks) Mark(status string, ids ...int) error {
 
 	err := t.validateStatus(status)
 	if err != nil {
-		return fmt.Errorf("couldn't mark task: %v", err)
+		return err
 	}
 
 	var updated int
@@ -115,6 +134,20 @@ func (t *Tasks) Mark(status string, ids ...int) error {
 
 	if updated == 0 {
 		return errors.New("task not found")
+	}
+
+	return nil
+}
+
+func (t *Tasks) Save(filename string) error {
+	data, err := json.MarshalIndent(t.items, "", "  ")
+	if err != nil {
+		return fmt.Errorf("encode json: %v", err)
+	}
+
+	err = os.WriteFile(filename, data, 0644)
+	if err != nil {
+		return fmt.Errorf("write data file: %v", err)
 	}
 
 	return nil

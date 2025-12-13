@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestAdd(t *testing.T) {
+func TestTasks_Add(t *testing.T) {
 	t.Run("single task", func(t *testing.T) {
 		tasks := Tasks{}
 		tasks.Add("", "drink coffee")
@@ -123,7 +123,7 @@ func TestAdd(t *testing.T) {
 	})
 }
 
-func TestClear(t *testing.T) {
+func TestTasks_Clear(t *testing.T) {
 	tasks := Tasks{}
 	tasks.Add("", "first", "second", "third")
 	tasks.Add("done", "fourth", "fifth")
@@ -136,7 +136,7 @@ func TestClear(t *testing.T) {
 	}
 }
 
-func TestClearByStatus(t *testing.T) {
+func TestTasks_ClearByStatus(t *testing.T) {
 	t.Run("valid status", func(t *testing.T) {
 		tasks := Tasks{}
 		tasks.Add("", "first", "second", "third")
@@ -169,7 +169,7 @@ func TestClearByStatus(t *testing.T) {
 	})
 }
 
-func TestDelete(t *testing.T) {
+func TestTasks_Delete(t *testing.T) {
 	t.Run("single task", func(t *testing.T) {
 		tasks := Tasks{}
 		tasks.Add("", "first", "second", "third")
@@ -212,7 +212,7 @@ func TestDelete(t *testing.T) {
 	})
 }
 
-func TestGetByStatus(t *testing.T) {
+func TestTasks_GetByStatus(t *testing.T) {
 	t.Run("done", func(t *testing.T) {
 		tasks := Tasks{}
 		tasks.Add("", "first", "second", "third", "fourth")
@@ -283,7 +283,7 @@ func TestGetByStatus(t *testing.T) {
 	})
 }
 
-func TestMark(t *testing.T) {
+func TestTasks_Mark(t *testing.T) {
 	t.Run("single task", func(t *testing.T) {
 		tasks := Tasks{}
 		tasks.Add("", "first", "second")
@@ -362,7 +362,7 @@ func TestMark(t *testing.T) {
 	})
 }
 
-func TestUpdate(t *testing.T) {
+func TestTasks_Update(t *testing.T) {
 	t.Run("single task", func(t *testing.T) {
 		tasks := Tasks{}
 		tasks.Add("", "first", "third")

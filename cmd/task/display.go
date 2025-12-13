@@ -8,7 +8,7 @@ import (
 
 func PrintTasks(writer io.Writer, tasks []Task) {
 	if len(tasks) == 0 {
-		fmt.Fprintln(writer, "no tasks")
+		fmt.Fprintln(writer, "Task list is empty")
 		return
 	}
 

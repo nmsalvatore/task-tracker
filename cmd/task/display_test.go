@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestPrintTasks(t *testing.T) {
+func TestDisplay_PrintTasks(t *testing.T) {
 	t.Run("no tasks message", func(t *testing.T) {
 		tasks := Tasks{}
 
@@ -13,7 +13,7 @@ func TestPrintTasks(t *testing.T) {
 		PrintTasks(&buffer, tasks.Get())
 
 		got := buffer.String()
-		want := "no tasks\n"
+		want := "Task list is empty\n"
 
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)
