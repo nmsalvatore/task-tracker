@@ -23,7 +23,6 @@ func run() error {
 	}
 
 	args := os.Args[2:]
-
 	switch os.Args[1] {
 	case "add":
 		err = cli.Add(os.Stdout, args)
@@ -32,7 +31,7 @@ func run() error {
 	case "delete":
 		err = cli.Delete(os.Stdout, args)
 	case "list":
-		PrintTasks(os.Stdout, cli.tasks.Get())
+		err = cli.List(os.Stdout, args)
 	case "mark":
 		lastIndex := len(os.Args) - 1
 		status := os.Args[lastIndex]

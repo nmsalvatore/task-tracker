@@ -350,3 +350,51 @@ func TestCLI_Delete(t *testing.T) {
 		})
 	})
 }
+
+func TestCLI_List(t *testing.T) {
+	t.Run("no tasks", func(t *testing.T) {
+		cli := NewCLI(filename)
+
+		buf := bytes.Buffer{}
+		cli.List(&buf, nil)
+
+		got := buf.String()
+		want := "Task list is empty\n"
+
+		if got != want {
+			t.Errorf("got %q, want %q", got, want)
+		}
+	})
+
+	t.Run("some todos", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one", "two", "three")
+
+		buf := bytes.Buffer{}
+		cli.List(&buf, nil)
+
+		got := buf.String()
+		want := "• 1: one\n• 2: two\n• 3: three\n"
+
+		if got != want {
+			t.Errorf("got %q, want %q", got, want)
+		}
+	})
+
+	t.Run("by status, in-progress", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one", "two")
+		cli.tasks.Add("in-progress", "three", "four")
+		cli.tasks.Add("done", "five", "six")
+
+		buf := bytes.Buffer{}
+		cli.List(&buf, []string{"in-progress"})
+
+		got := buf.String()
+		want := "> 3: three\n> 4: four\n"
+
+		if got != want {
+			t.Errorf("got %q, want %q", got, want)
+		}
+	})
+}

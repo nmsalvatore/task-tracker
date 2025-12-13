@@ -7,12 +7,12 @@ import (
 )
 
 func PrintTasks(writer io.Writer, tasks []Task) {
+	message := &strings.Builder{}
+
 	if len(tasks) == 0 {
-		fmt.Fprintln(writer, "Task list is empty")
-		return
+		message.WriteString("Task list is empty\n")
 	}
 
-	message := &strings.Builder{}
 	for _, task := range tasks {
 		switch task.Status {
 		case "todo":

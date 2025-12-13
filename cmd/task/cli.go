@@ -83,6 +83,27 @@ func (c *CLI) Delete(writer io.Writer, args []string) error {
 	return nil
 }
 
+func (c *CLI) List(writer io.Writer, args []string) error {
+	var tasks []Task
+
+	if len(args) > 1 {
+		return errors.New("too many arguments")
+	}
+
+	if len(args) == 0 {
+		PrintTasks(writer, c.tasks.Get())
+		return nil
+	}
+
+	tasks, err := c.tasks.GetByStatus(args[0])
+	if err != nil {
+		return err
+	}
+
+	PrintTasks(writer, tasks)
+	return nil
+}
+
 func argsToInts(args []string) ([]int, error) {
 	nums := make([]int, len(args))
 
