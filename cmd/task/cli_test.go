@@ -17,11 +17,11 @@ func TestCLI_Add(t *testing.T) {
 
 		got := cli.tasks.Get()
 		if len(got) != 1 {
-			t.Fatalf("got %d tasks, wanted 1", len(got))
+			t.Fatalf("got %d tasks, want 1", len(got))
 		}
 
 		if got[0].Description != args[0] {
-			t.Errorf("got %q, wanted %q", got[0].Description, args)
+			t.Errorf("got %q, want %q", got[0].Description, args)
 		}
 	})
 
@@ -36,12 +36,12 @@ func TestCLI_Add(t *testing.T) {
 
 		got := cli.tasks.Get()
 		if len(got) != 3 {
-			t.Fatalf("got %d tasks, wanted 3", len(got))
+			t.Fatalf("got %d tasks, want 3", len(got))
 		}
 
 		for i := range got {
 			if got[i].Description != args[i] {
-				t.Errorf("got %q, wanted %q", got[i].Description, args[i])
+				t.Errorf("got %q, want %q", got[i].Description, args[i])
 			}
 		}
 	})
@@ -59,7 +59,7 @@ func TestCLI_Add(t *testing.T) {
 		want := "Added task \"one\"\n"
 
 		if got != want {
-			t.Errorf("got %q, wanted %q", got, want)
+			t.Errorf("got %q, want %q", got, want)
 		}
 	})
 
@@ -76,7 +76,7 @@ func TestCLI_Add(t *testing.T) {
 		want := "Added task \"one\"\nAdded task \"two\"\n"
 
 		if got != want {
-			t.Errorf("got %q, wanted %q", got, want)
+			t.Errorf("got %q, want %q", got, want)
 		}
 	})
 }
@@ -97,7 +97,7 @@ func TestCLI_Clear(t *testing.T) {
 
 		got := cli.tasks.Get()
 		if len(got) != 0 {
-			t.Errorf("got %d tasks, wanted 0", len(got))
+			t.Errorf("got %d tasks, want 0", len(got))
 		}
 	})
 
@@ -121,11 +121,11 @@ func TestCLI_Clear(t *testing.T) {
 
 		got := cli.tasks.Get()
 		if len(got) != 2 {
-			t.Errorf("got %d tasks, wanted 2", len(got))
+			t.Errorf("got %d tasks, want 2", len(got))
 		}
 	})
 
-	t.Run("message for all", func(t *testing.T) {
+	t.Run("all message", func(t *testing.T) {
 		cli := NewCLI(filename)
 
 		err := cli.tasks.Add("", "one", "two")
@@ -142,11 +142,11 @@ func TestCLI_Clear(t *testing.T) {
 		got := buf.String()
 		want := "Cleared all tasks\n"
 		if got != want {
-			t.Errorf("got %q, wanted %q", got, want)
+			t.Errorf("got %q, want %q", got, want)
 		}
 	})
 
-	t.Run("message for all", func(t *testing.T) {
+	t.Run("by status message", func(t *testing.T) {
 		cli := NewCLI(filename)
 
 		err := cli.tasks.Add("", "one", "two", "three", "four")
@@ -168,7 +168,7 @@ func TestCLI_Clear(t *testing.T) {
 		got := buf.String()
 		want := "Cleared all tasks with status \"done\"\n"
 		if got != want {
-			t.Errorf("got %q, wanted %q", got, want)
+			t.Errorf("got %q, want %q", got, want)
 		}
 	})
 
@@ -177,7 +177,7 @@ func TestCLI_Clear(t *testing.T) {
 
 		err := cli.tasks.Add("zero", "one", "two", "three", "four")
 		if err == nil {
-			t.Error("wanted error, but didn't get one")
+			t.Error("want error, but didn't get one")
 		}
 	})
 }
