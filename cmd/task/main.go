@@ -30,21 +30,7 @@ func run() error {
 	case "clear":
 		err = cli.Clear(os.Stdout, args)
 	case "delete":
-		ids, err := argsToInts(os.Args[2:])
-		if err != nil {
-			return fmt.Errorf("mark task: %v", err)
-		}
-
-		err = cli.tasks.Delete(ids...)
-		if err != nil {
-			return fmt.Errorf("delete task: %v", err)
-		}
-
-		for _, id := range ids {
-			// TODO: print description of deleted tasks
-			// 		 instead of id number
-			fmt.Printf("Deleted task %d\n", id)
-		}
+		err = cli.Delete(os.Stdout, args)
 	case "list":
 		PrintTasks(os.Stdout, cli.tasks.Get())
 	case "mark":
@@ -78,18 +64,4 @@ func run() error {
 	}
 
 	return nil
-}
-
-func argsToInts(args []string) ([]int, error) {
-	nums := make([]int, len(args))
-
-	for i := range args {
-		num, err := strconv.Atoi(args[i])
-		if err != nil {
-			return nil, fmt.Errorf("convert string to int: %v", err)
-		}
-		nums[i] = num
-	}
-
-	return nums, nil
 }

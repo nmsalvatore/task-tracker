@@ -247,9 +247,106 @@ func TestCLI_Clear(t *testing.T) {
 	t.Run("invalid status", func(t *testing.T) {
 		cli := NewCLI(filename)
 
-		err := cli.tasks.Add("zero", "one", "two", "three", "four")
+		err := cli.tasks.Add("", "one", "two", "three", "four")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = cli.Clear(io.Discard, []string{"bleh"})
 		if err == nil {
 			t.Error("want error, but didn't get one")
 		}
+	})
+}
+
+func TestCLI_Delete(t *testing.T) {
+	t.Run("single task", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one", "two", "three")
+
+		err := cli.Delete(io.Discard, []string{"2"})
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got := cli.tasks.Get()
+		want := []string{"one", "three"}
+
+		if len(got) != 2 {
+			t.Fatalf("got length %d, want 2", len(got))
+		}
+
+		for i := range got {
+			if got[i].Description != want[i] {
+				t.Errorf("got %q, want %q", got[i].Description, want[i])
+			}
+		}
+	})
+
+	t.Run("multiple tasks", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one", "two", "three", "four")
+
+		err := cli.Delete(io.Discard, []string{"1", "2"})
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got := cli.tasks.Get()
+		want := []string{"three", "four"}
+
+		if len(got) != 2 {
+			t.Fatalf("got length %d, want 2", len(got))
+		}
+
+		for i := range got {
+			if got[i].Description != want[i] {
+				t.Errorf("got %q, want %q", got[i].Description, want[i])
+			}
+		}
+
+		t.Run("no tasks", func(t *testing.T) {
+			cli := NewCLI(filename)
+			err := cli.Delete(io.Discard, nil)
+			if err == nil {
+				t.Error("wanted error, but didn't get one")
+			}
+		})
+
+		t.Run("single task message", func(t *testing.T) {
+			cli := NewCLI(filename)
+			cli.tasks.Add("", "one", "two")
+
+			buf := bytes.Buffer{}
+			err := cli.Delete(&buf, []string{"1"})
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			got := buf.String()
+			want := "Deleted task 1\n"
+
+			if got != want {
+				t.Errorf("got %q, want %q", got, want)
+			}
+		})
+
+		t.Run("multiple tasks message", func(t *testing.T) {
+			cli := NewCLI(filename)
+			cli.tasks.Add("", "one", "two", "three", "four")
+
+			buf := bytes.Buffer{}
+			err := cli.Delete(&buf, []string{"1", "3"})
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			got := buf.String()
+			want := "Deleted task 1\nDeleted task 3\n"
+
+			if got != want {
+				t.Errorf("got %q, want %q", got, want)
+			}
+		})
 	})
 }

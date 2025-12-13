@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"slices"
+	"strconv"
 	"strings"
 )
 
@@ -27,11 +28,6 @@ func (c *CLI) Add(writer io.Writer, args []string) error {
 	}
 
 	status, descriptions, err := parseAddArgs(args)
-	if err != nil {
-		return err
-	}
-
-	err = c.tasks.validateStatus(status)
 	if err != nil {
 		return err
 	}
@@ -70,9 +66,38 @@ func (c *CLI) Clear(writer io.Writer, args []string) error {
 	return nil
 }
 
-func parseAddArgs(args []string) (status string, descriptions []string, err error) {
-	status = "todo"
+func (c *CLI) Delete(writer io.Writer, args []string) error {
+	ids, err := argsToInts(args)
+	if err != nil {
+		return err
+	}
 
+	err = c.tasks.Delete(ids...)
+	if err != nil {
+		return err
+	}
+
+	for _, id := range ids {
+		fmt.Fprintf(writer, "Deleted task %d\n", id)
+	}
+	return nil
+}
+
+func argsToInts(args []string) ([]int, error) {
+	nums := make([]int, len(args))
+
+	for i := range args {
+		num, err := strconv.Atoi(args[i])
+		if err != nil {
+			return nil, fmt.Errorf("convert string to int: %v", err)
+		}
+		nums[i] = num
+	}
+
+	return nums, nil
+}
+
+func parseAddArgs(args []string) (status string, descriptions []string, err error) {
 	for i := 0; i < len(args); i++ {
 		if args[i] == "--status" {
 			if i+1 >= len(args) {
