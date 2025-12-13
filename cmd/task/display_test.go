@@ -5,12 +5,12 @@ import (
 	"testing"
 )
 
-func TestDisplay_PrintTasks(t *testing.T) {
+func TestDisplay_ListTasks(t *testing.T) {
 	t.Run("no tasks message", func(t *testing.T) {
 		tasks := Tasks{}
 
 		buffer := bytes.Buffer{}
-		PrintTasks(&buffer, tasks.Get())
+		ListTasks(&buffer, tasks.Get())
 
 		got := buffer.String()
 		want := "Task list is empty\n"
@@ -25,7 +25,7 @@ func TestDisplay_PrintTasks(t *testing.T) {
 		tasks.Add("", "drink coffee")
 
 		buffer := bytes.Buffer{}
-		PrintTasks(&buffer, tasks.Get())
+		ListTasks(&buffer, tasks.Get())
 
 		got := buffer.String()
 		want := "• 1: drink coffee\n"
@@ -41,7 +41,7 @@ func TestDisplay_PrintTasks(t *testing.T) {
 		tasks.Add("", descriptions...)
 
 		buffer := bytes.Buffer{}
-		PrintTasks(&buffer, tasks.Get())
+		ListTasks(&buffer, tasks.Get())
 
 		got := buffer.String()
 		want := "• 1: do a little dance\n• 2: make a little love\n"
@@ -56,7 +56,7 @@ func TestDisplay_PrintTasks(t *testing.T) {
 		tasks.Add("in-progress", "build task tracker")
 
 		buffer := bytes.Buffer{}
-		PrintTasks(&buffer, tasks.Get())
+		ListTasks(&buffer, tasks.Get())
 
 		got := buffer.String()
 		want := "> 1: build task tracker\n"
@@ -71,7 +71,7 @@ func TestDisplay_PrintTasks(t *testing.T) {
 		tasks.Add("done", "drink coffee")
 
 		buffer := bytes.Buffer{}
-		PrintTasks(&buffer, tasks.Get())
+		ListTasks(&buffer, tasks.Get())
 
 		got := buffer.String()
 		want := "× 1: drink coffee\n"
@@ -88,7 +88,7 @@ func TestDisplay_PrintTasks(t *testing.T) {
 
 		buffer := bytes.Buffer{}
 		items, _ := tasks.GetByStatus("done")
-		PrintTasks(&buffer, items)
+		ListTasks(&buffer, items)
 
 		got := buffer.String()
 		want := "× 2: second\n"
