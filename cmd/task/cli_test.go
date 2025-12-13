@@ -140,6 +140,17 @@ func TestCLI_Add(t *testing.T) {
 			t.Error("wanted error, but didn't get one")
 		}
 	})
+
+	t.Run("invalid flag", func(t *testing.T) {
+		cli := NewCLI(filename)
+
+		args := []string{"drink coffee", "--guzzle", "yess"}
+
+		err := cli.Add(io.Discard, args)
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+	})
 }
 
 func TestCLI_Clear(t *testing.T) {
