@@ -64,12 +64,9 @@ func (t *Tasks) ClearByStatus(status string) error {
 }
 
 func (t *Tasks) Delete(ids ...int) error {
-	for _, id := range ids {
-		if !slices.ContainsFunc(t.items, func(task Task) bool {
-			return task.ID == id
-		}) {
-			return fmt.Errorf("no task with ID %d", id)
-		}
+	err := t.validateIds(ids...)
+	if err != nil {
+		return err
 	}
 
 	t.items = slices.DeleteFunc(t.items, func(task Task) bool {
@@ -126,6 +123,11 @@ func (t *Tasks) Mark(status string, ids ...int) error {
 		return err
 	}
 
+	err = t.validateIds(ids...)
+	if err != nil {
+		return err
+	}
+
 	var updated int
 	for i := range t.items {
 		if slices.Contains(ids, t.items[i].ID) {
@@ -174,6 +176,17 @@ func (t *Tasks) getMaxID() (max int) {
 		}
 	}
 	return
+}
+
+func (t *Tasks) validateIds(ids ...int) error {
+	for _, id := range ids {
+		if !slices.ContainsFunc(t.items, func(task Task) bool {
+			return task.ID == id
+		}) {
+			return fmt.Errorf("no task with ID %d", id)
+		}
+	}
+	return nil
 }
 
 func (t *Tasks) validateStatus(status string) error {

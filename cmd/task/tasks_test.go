@@ -375,6 +375,24 @@ func TestTasks_Mark(t *testing.T) {
 		}
 
 	})
+
+	t.Run("some valid ids, some invalid", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("", "first", "second", "third")
+
+		err := tasks.Mark("done", 2, 3, 4)
+		if err == nil {
+			t.Fatal("wanted error, but didn't get one")
+		}
+
+		got := tasks.Get()
+
+		for _, task := range got {
+			if task.Status != "todo" {
+				t.Errorf("got status %q, want \"todo\"", task.Status)
+			}
+		}
+	})
 }
 
 func TestTasks_Update(t *testing.T) {
