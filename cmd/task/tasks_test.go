@@ -210,6 +210,21 @@ func TestTasks_Delete(t *testing.T) {
 			t.Error("wanted error, but didn't get one")
 		}
 	})
+
+	t.Run("some valid ids, some invalid", func(t *testing.T) {
+		tasks := Tasks{}
+		tasks.Add("", "first", "second", "third")
+
+		err := tasks.Delete(2, 3, 4)
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+
+		got := tasks.Get()
+		if len(got) != 3 {
+			t.Errorf("got length %d, want 3", len(got))
+		}
+	})
 }
 
 func TestTasks_GetByStatus(t *testing.T) {

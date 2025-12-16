@@ -64,15 +64,18 @@ func (t *Tasks) ClearByStatus(status string) error {
 }
 
 func (t *Tasks) Delete(ids ...int) error {
-	startLen := len(t.items)
+	for _, id := range ids {
+		if !slices.ContainsFunc(t.items, func(task Task) bool {
+			return task.ID == id
+		}) {
+			return fmt.Errorf("no task with ID %d", id)
+		}
+	}
 
 	t.items = slices.DeleteFunc(t.items, func(task Task) bool {
 		return slices.Contains(ids, task.ID)
 	})
 
-	if len(t.items) == startLen {
-		return errors.New("task not found")
-	}
 	return nil
 }
 

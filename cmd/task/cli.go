@@ -52,12 +52,8 @@ func (c *CLI) Clear(writer io.Writer, args []string) error {
 	}
 
 	status := args[0]
-	err := c.tasks.validateStatus(status)
-	if err != nil {
-		return err
-	}
 
-	err = c.tasks.ClearByStatus(status)
+	err := c.tasks.ClearByStatus(status)
 	if err != nil {
 		return err
 	}
@@ -67,6 +63,10 @@ func (c *CLI) Clear(writer io.Writer, args []string) error {
 }
 
 func (c *CLI) Delete(writer io.Writer, args []string) error {
+	if len(args) == 0 {
+		return errors.New("no task ID provided")
+	}
+
 	ids, err := argsToInts(args)
 	if err != nil {
 		return err
@@ -84,8 +84,6 @@ func (c *CLI) Delete(writer io.Writer, args []string) error {
 }
 
 func (c *CLI) List(writer io.Writer, args []string) error {
-	var tasks []Task
-
 	if len(args) > 1 {
 		return errors.New("too many arguments")
 	}

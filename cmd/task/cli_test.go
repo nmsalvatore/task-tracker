@@ -304,50 +304,50 @@ func TestCLI_Delete(t *testing.T) {
 				t.Errorf("got %q, want %q", got[i].Description, want[i])
 			}
 		}
+	})
 
-		t.Run("no tasks", func(t *testing.T) {
-			cli := NewCLI(filename)
-			err := cli.Delete(io.Discard, nil)
-			if err == nil {
-				t.Error("wanted error, but didn't get one")
-			}
-		})
+	t.Run("no tasks", func(t *testing.T) {
+		cli := NewCLI(filename)
+		err := cli.Delete(io.Discard, nil)
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+	})
 
-		t.Run("single task message", func(t *testing.T) {
-			cli := NewCLI(filename)
-			cli.tasks.Add("", "one", "two")
+	t.Run("single task message", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one", "two")
 
-			buf := bytes.Buffer{}
-			err := cli.Delete(&buf, []string{"1"})
-			if err != nil {
-				t.Fatal(err)
-			}
+		buf := bytes.Buffer{}
+		err := cli.Delete(&buf, []string{"1"})
+		if err != nil {
+			t.Fatal(err)
+		}
 
-			got := buf.String()
-			want := "Deleted task 1\n"
+		got := buf.String()
+		want := "Deleted task 1\n"
 
-			if got != want {
-				t.Errorf("got %q, want %q", got, want)
-			}
-		})
+		if got != want {
+			t.Errorf("got %q, want %q", got, want)
+		}
+	})
 
-		t.Run("multiple tasks message", func(t *testing.T) {
-			cli := NewCLI(filename)
-			cli.tasks.Add("", "one", "two", "three", "four")
+	t.Run("multiple tasks message", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one", "two", "three", "four")
 
-			buf := bytes.Buffer{}
-			err := cli.Delete(&buf, []string{"1", "3"})
-			if err != nil {
-				t.Fatal(err)
-			}
+		buf := bytes.Buffer{}
+		err := cli.Delete(&buf, []string{"1", "3"})
+		if err != nil {
+			t.Fatal(err)
+		}
 
-			got := buf.String()
-			want := "Deleted task 1\nDeleted task 3\n"
+		got := buf.String()
+		want := "Deleted task 1\nDeleted task 3\n"
 
-			if got != want {
-				t.Errorf("got %q, want %q", got, want)
-			}
-		})
+		if got != want {
+			t.Errorf("got %q, want %q", got, want)
+		}
 	})
 }
 
@@ -430,4 +430,20 @@ func TestCLI_List(t *testing.T) {
 			t.Error("wanted error, but didn't get one")
 		}
 	})
+}
+
+func TestCLI_Mark(t *testing.T) {
+	t.Run("single task, in-progress", func(t *testing.T) {})
+
+	t.Run("single task, done", func(t *testing.T) {})
+
+	t.Run("multiple tasks, in-progress", func(t *testing.T) {})
+
+	t.Run("multiple tasks, done", func(t *testing.T) {})
+
+	t.Run("no status", func(t *testing.T) {})
+
+	t.Run("invalid status", func(t *testing.T) {})
+
+	t.Run("invalid id", func(t *testing.T) {})
 }
