@@ -149,18 +149,6 @@ func parseAddArgs(args []string) (status string, descriptions []string, err erro
 	return
 }
 
-func parseMarkArgs(args []string) (status string, ids []int, err error) {
-	li := len(args) - 1
-	status = args[li]
-
-	ids, err = argsToInts(args[:li])
-	if err != nil {
-		return "", nil, err
-	}
-
-	return
-}
-
 func validateAddFlags(args []string) error {
 	if slices.ContainsFunc(args, func(arg string) bool {
 		return strings.HasPrefix(arg, "--") && arg != "--status"
