@@ -16,10 +16,10 @@
 
 ## CLI Layer (cli.go)
 
-- [ ] Add (IN PROGRESS; NEEDS MARK FLAG)
+- [x] Add
 - [x] Clear
-- [ ] Delete
-- [ ] List
+- [x] Delete
+- [ ] List (more tests)
 - [ ] Mark
 - [ ] Update
 - [ ] Help
