@@ -433,17 +433,67 @@ func TestCLI_List(t *testing.T) {
 }
 
 func TestCLI_Mark(t *testing.T) {
-	t.Run("single task, in-progress", func(t *testing.T) {})
+	t.Run("single task, in-progress", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one")
 
-	t.Run("single task, done", func(t *testing.T) {})
+		status := "in-progress"
+		err := cli.Mark([]string{"1", status})
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got := cli.tasks.Get()
+		if got[0].Status != status {
+			t.Errorf("got status %q, want %q", got[0].Status, status)
+		}
+	})
+
+	t.Run("single task, done", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one")
+
+		status := "done"
+		err := cli.Mark([]string{"1", status})
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got := cli.tasks.Get()
+		if got[0].Status != status {
+			t.Errorf("got status %q, want %q", got[0].Status, status)
+		}
+	})
+
+	t.Run("single task, todo", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("done", "one")
+
+		status := "todo"
+		err := cli.Mark([]string{"1", status})
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got := cli.tasks.Get()
+		if got[0].Status != status {
+			t.Errorf("got status %q, want %q", got[0].Status, status)
+		}
+	})
 
 	t.Run("multiple tasks, in-progress", func(t *testing.T) {})
 
 	t.Run("multiple tasks, done", func(t *testing.T) {})
 
+	t.Run("multiple tasks, todo", func(t *testing.T) {})
+
 	t.Run("no status", func(t *testing.T) {})
+
+	t.Run("no id", func(t *testing.T) {})
 
 	t.Run("invalid status", func(t *testing.T) {})
 
 	t.Run("invalid id", func(t *testing.T) {})
+
+	t.Run("valid and invalid ids", func(t *testing.T) {})
 }

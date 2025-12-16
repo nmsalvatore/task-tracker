@@ -102,6 +102,23 @@ func (c *CLI) List(writer io.Writer, args []string) error {
 	return nil
 }
 
+func (c *CLI) Mark(args []string) error {
+	li := len(args) - 1
+	status := args[li]
+
+	ids, err := argsToInts(args[:li])
+	if err != nil {
+		return err
+	}
+
+	err = c.tasks.Mark(status, ids...)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func argsToInts(args []string) ([]int, error) {
 	nums := make([]int, len(args))
 
@@ -127,6 +144,18 @@ func parseAddArgs(args []string) (status string, descriptions []string, err erro
 		} else {
 			descriptions = append(descriptions, args[i])
 		}
+	}
+
+	return
+}
+
+func parseMarkArgs(args []string) (status string, ids []int, err error) {
+	li := len(args) - 1
+	status = args[li]
+
+	ids, err = argsToInts(args[:li])
+	if err != nil {
+		return "", nil, err
 	}
 
 	return
