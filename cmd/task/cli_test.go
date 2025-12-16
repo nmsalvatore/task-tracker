@@ -481,19 +481,110 @@ func TestCLI_Mark(t *testing.T) {
 		}
 	})
 
-	t.Run("multiple tasks, in-progress", func(t *testing.T) {})
+	t.Run("multiple tasks, in-progress", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one", "two", "three")
 
-	t.Run("multiple tasks, done", func(t *testing.T) {})
+		status := "in-progress"
+		err := cli.Mark([]string{"1", "2", "3", status})
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	t.Run("multiple tasks, todo", func(t *testing.T) {})
+		got := cli.tasks.Get()
 
-	t.Run("no status", func(t *testing.T) {})
+		for i := range got {
+			if got[i].Status != status {
+				t.Errorf("got status %q, want %q", got[i].Status, status)
+			}
+		}
+	})
 
-	t.Run("no id", func(t *testing.T) {})
+	t.Run("multiple tasks, done", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one", "two", "three")
 
-	t.Run("invalid status", func(t *testing.T) {})
+		status := "done"
+		err := cli.Mark([]string{"1", "2", "3", status})
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	t.Run("invalid id", func(t *testing.T) {})
+		got := cli.tasks.Get()
 
-	t.Run("valid and invalid ids", func(t *testing.T) {})
+		for i := range got {
+			if got[i].Status != status {
+				t.Errorf("got status %q, want %q", got[i].Status, status)
+			}
+		}
+	})
+
+	t.Run("multiple tasks, todo", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("done", "one", "two", "three")
+
+		status := "todo"
+		err := cli.Mark([]string{"1", "2", "3", status})
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got := cli.tasks.Get()
+
+		for i := range got {
+			if got[i].Status != status {
+				t.Errorf("got status %q, want %q", got[i].Status, status)
+			}
+		}
+	})
+
+	t.Run("no status", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one")
+
+		err := cli.Mark([]string{"1"})
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+	})
+
+	t.Run("no id", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one")
+
+		err := cli.Mark([]string{"done"})
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+	})
+
+	t.Run("invalid status", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one")
+
+		err := cli.Mark([]string{"1", "doing"})
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+	})
+
+	t.Run("invalid id", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one")
+
+		err := cli.Mark([]string{"2", "done"})
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+	})
+
+	t.Run("valid and invalid ids", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one")
+
+		err := cli.Mark([]string{"1", "2", "done"})
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+	})
 }
