@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"testing"
 )
@@ -433,12 +434,12 @@ func TestCLI_List(t *testing.T) {
 }
 
 func TestCLI_Mark(t *testing.T) {
-	t.Run("single task, in-progress", func(t *testing.T) {
+	t.Run("single task", func(t *testing.T) {
 		cli := NewCLI(filename)
 		cli.tasks.Add("", "one")
 
 		status := "in-progress"
-		err := cli.Mark([]string{"1", status})
+		err := cli.Mark(io.Discard, []string{"1", status})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -449,82 +450,12 @@ func TestCLI_Mark(t *testing.T) {
 		}
 	})
 
-	t.Run("single task, done", func(t *testing.T) {
-		cli := NewCLI(filename)
-		cli.tasks.Add("", "one")
-
-		status := "done"
-		err := cli.Mark([]string{"1", status})
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		got := cli.tasks.Get()
-		if got[0].Status != status {
-			t.Errorf("got status %q, want %q", got[0].Status, status)
-		}
-	})
-
-	t.Run("single task, todo", func(t *testing.T) {
-		cli := NewCLI(filename)
-		cli.tasks.Add("done", "one")
-
-		status := "todo"
-		err := cli.Mark([]string{"1", status})
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		got := cli.tasks.Get()
-		if got[0].Status != status {
-			t.Errorf("got status %q, want %q", got[0].Status, status)
-		}
-	})
-
-	t.Run("multiple tasks, in-progress", func(t *testing.T) {
-		cli := NewCLI(filename)
-		cli.tasks.Add("", "one", "two", "three")
-
-		status := "in-progress"
-		err := cli.Mark([]string{"1", "2", "3", status})
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		got := cli.tasks.Get()
-
-		for i := range got {
-			if got[i].Status != status {
-				t.Errorf("got status %q, want %q", got[i].Status, status)
-			}
-		}
-	})
-
-	t.Run("multiple tasks, done", func(t *testing.T) {
+	t.Run("multiple tasks", func(t *testing.T) {
 		cli := NewCLI(filename)
 		cli.tasks.Add("", "one", "two", "three")
 
 		status := "done"
-		err := cli.Mark([]string{"1", "2", "3", status})
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		got := cli.tasks.Get()
-
-		for i := range got {
-			if got[i].Status != status {
-				t.Errorf("got status %q, want %q", got[i].Status, status)
-			}
-		}
-	})
-
-	t.Run("multiple tasks, todo", func(t *testing.T) {
-		cli := NewCLI(filename)
-		cli.tasks.Add("done", "one", "two", "three")
-
-		status := "todo"
-		err := cli.Mark([]string{"1", "2", "3", status})
+		err := cli.Mark(io.Discard, []string{"1", "2", "3", status})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -542,7 +473,7 @@ func TestCLI_Mark(t *testing.T) {
 		cli := NewCLI(filename)
 		cli.tasks.Add("", "one")
 
-		err := cli.Mark([]string{"1"})
+		err := cli.Mark(io.Discard, []string{"1"})
 		if err == nil {
 			t.Error("wanted error, but didn't get one")
 		}
@@ -552,7 +483,7 @@ func TestCLI_Mark(t *testing.T) {
 		cli := NewCLI(filename)
 		cli.tasks.Add("", "one")
 
-		err := cli.Mark([]string{"done"})
+		err := cli.Mark(io.Discard, []string{"done"})
 		if err == nil {
 			t.Error("wanted error, but didn't get one")
 		}
@@ -562,7 +493,7 @@ func TestCLI_Mark(t *testing.T) {
 		cli := NewCLI(filename)
 		cli.tasks.Add("", "one")
 
-		err := cli.Mark([]string{"1", "doing"})
+		err := cli.Mark(io.Discard, []string{"1", "doing"})
 		if err == nil {
 			t.Error("wanted error, but didn't get one")
 		}
@@ -572,7 +503,7 @@ func TestCLI_Mark(t *testing.T) {
 		cli := NewCLI(filename)
 		cli.tasks.Add("", "one")
 
-		err := cli.Mark([]string{"2", "done"})
+		err := cli.Mark(io.Discard, []string{"2", "done"})
 		if err == nil {
 			t.Error("wanted error, but didn't get one")
 		}
@@ -582,9 +513,57 @@ func TestCLI_Mark(t *testing.T) {
 		cli := NewCLI(filename)
 		cli.tasks.Add("", "one")
 
-		err := cli.Mark([]string{"1", "2", "done"})
+		err := cli.Mark(io.Discard, []string{"1", "2", "done"})
 		if err == nil {
 			t.Error("wanted error, but didn't get one")
 		}
 	})
+
+	t.Run("message, single task", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one")
+
+		status := "in-progress"
+		buf := bytes.Buffer{}
+
+		err := cli.Mark(&buf, []string{"1", status})
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got := buf.String()
+		want := fmt.Sprintf("Task 1 marked %q\n", status)
+
+		if got != want {
+			t.Errorf("got message %q, want %q", got, want)
+		}
+	})
+
+	t.Run("message, multiple tasks", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one", "two")
+
+		status := "in-progress"
+		buf := bytes.Buffer{}
+
+		err := cli.Mark(&buf, []string{"1", "2", status})
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got := buf.String()
+		want := fmt.Sprintf("Task 1 marked %q\nTask 2 marked %q\n", status, status)
+
+		if got != want {
+			t.Errorf("got message %q, want %q", got, want)
+		}
+	})
+}
+
+func TestCLI_Update(t *testing.T) {
+	t.Run("successful", func(t *testing.T) {})
+
+	t.Run("not two arguments", func(t *testing.T) {})
+
+	t.Run("invalid id", func(t *testing.T) {})
 }

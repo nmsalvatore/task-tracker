@@ -102,7 +102,7 @@ func (c *CLI) List(writer io.Writer, args []string) error {
 	return nil
 }
 
-func (c *CLI) Mark(args []string) error {
+func (c *CLI) Mark(writer io.Writer, args []string) error {
 	li := len(args) - 1
 	status := args[li]
 
@@ -116,6 +116,9 @@ func (c *CLI) Mark(args []string) error {
 		return err
 	}
 
+	for _, id := range ids {
+		fmt.Fprintf(writer, "Task %d marked %q\n", id, status)
+	}
 	return nil
 }
 

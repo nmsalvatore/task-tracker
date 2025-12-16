@@ -33,18 +33,7 @@ func run() error {
 	case "list":
 		err = cli.List(os.Stdout, args)
 	case "mark":
-		lastIndex := len(os.Args) - 1
-		status := os.Args[lastIndex]
-
-		ids, err := argsToInts(os.Args[2:lastIndex])
-		if err != nil {
-			return fmt.Errorf("mark task: %v", err)
-		}
-
-		err = cli.tasks.Mark(status, ids...)
-		if err != nil {
-			return fmt.Errorf("mark task: %v", err)
-		}
+		err = cli.Mark(os.Stdout, args)
 	case "update":
 		id, err := strconv.Atoi(os.Args[2])
 		if err != nil {
