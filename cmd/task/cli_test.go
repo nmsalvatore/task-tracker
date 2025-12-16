@@ -397,4 +397,37 @@ func TestCLI_List(t *testing.T) {
 			t.Errorf("got %q, want %q", got, want)
 		}
 	})
+
+	t.Run("by status, done", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one", "two")
+		cli.tasks.Add("in-progress", "three", "four")
+		cli.tasks.Add("done", "five", "six")
+
+		buf := bytes.Buffer{}
+		cli.List(&buf, []string{"done"})
+
+		got := buf.String()
+		want := "× 5: five\n× 6: six\n"
+
+		if got != want {
+			t.Errorf("got %q, want %q", got, want)
+		}
+	})
+
+	t.Run("invalid status", func(t *testing.T) {
+		cli := NewCLI(filename)
+		err := cli.List(io.Discard, []string{"complete"})
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+	})
+
+	t.Run("too many arguments", func(t *testing.T) {
+		cli := NewCLI(filename)
+		err := cli.List(io.Discard, []string{"done", "extra"})
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+	})
 }
