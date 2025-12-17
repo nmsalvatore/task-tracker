@@ -14,11 +14,15 @@ func main() {
 }
 
 func run() error {
-	cli := NewCLI("tasks.json")
-
-	err := cli.tasks.Load(cli.filename)
+	dir, err := os.UserHomeDir()
 	if err != nil {
-		return fmt.Errorf("load tasks: %v", err)
+		return fmt.Errorf("getting home directory: %v", err)
+	}
+
+	cli := NewCLI(dir + "/.tasks.json")
+	err = cli.tasks.Load(cli.filename)
+	if err != nil {
+		return fmt.Errorf("loading tasks: %v", err)
 	}
 
 	args := os.Args[2:]
@@ -40,7 +44,7 @@ func run() error {
 
 	err = cli.tasks.Save(cli.filename)
 	if err != nil {
-		return fmt.Errorf("save tasks: %v", err)
+		return fmt.Errorf("saving tasks: %v", err)
 	}
 
 	return nil
