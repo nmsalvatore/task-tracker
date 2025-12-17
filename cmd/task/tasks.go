@@ -128,17 +128,11 @@ func (t *Tasks) Mark(status string, ids ...int) error {
 		return err
 	}
 
-	var updated int
 	for i := range t.items {
 		if slices.Contains(ids, t.items[i].ID) {
 			t.items[i].Status = status
 			t.items[i].UpdatedAt = time.Now()
-			updated++
 		}
-	}
-
-	if updated == 0 {
-		return errors.New("task not found")
 	}
 
 	return nil
@@ -179,6 +173,10 @@ func (t *Tasks) getMaxID() (max int) {
 }
 
 func (t *Tasks) validateIds(ids ...int) error {
+	if len(ids) == 0 {
+		return errors.New("must specify a task ID")
+	}
+
 	for _, id := range ids {
 		if !slices.ContainsFunc(t.items, func(task Task) bool {
 			return task.ID == id

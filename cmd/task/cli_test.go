@@ -469,6 +469,16 @@ func TestCLI_Mark(t *testing.T) {
 		}
 	})
 
+	t.Run("no arguments", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one")
+
+		err := cli.Mark(io.Discard, []string{})
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+	})
+
 	t.Run("no status", func(t *testing.T) {
 		cli := NewCLI(filename)
 		cli.tasks.Add("", "one")
@@ -594,7 +604,7 @@ func TestCLI_Update(t *testing.T) {
 		want := "Task 2 updated to \"party\"\n"
 
 		if got != want {
-			t.Errorf("got message %q, want %q", got, want)
+			t.Errorf("got message %s, want %q", got, want)
 		}
 	})
 

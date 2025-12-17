@@ -103,6 +103,10 @@ func (c *CLI) List(writer io.Writer, args []string) error {
 }
 
 func (c *CLI) Mark(writer io.Writer, args []string) error {
+	if len(args) < 2 {
+		return errors.New("missing arguments")
+	}
+
 	li := len(args) - 1
 	status := args[li]
 
@@ -143,7 +147,7 @@ func (c *CLI) Update(writer io.Writer, args []string) error {
 		return err
 	}
 
-	fmt.Fprintf(writer, "Task 2 updated to %q\n", description)
+	fmt.Fprintf(writer, "Task %d updated to %q\n", id, description)
 	return nil
 }
 
