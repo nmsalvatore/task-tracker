@@ -122,6 +122,31 @@ func (c *CLI) Mark(writer io.Writer, args []string) error {
 	return nil
 }
 
+func (c *CLI) Update(writer io.Writer, args []string) error {
+	if len(args) < 2 {
+		return fmt.Errorf("missing arguments")
+	}
+
+	if len(args) > 2 {
+		return fmt.Errorf("too many arguments")
+	}
+
+	id, err := strconv.Atoi(args[0])
+	if err != nil {
+		return err
+	}
+
+	description := args[1]
+
+	err = c.tasks.Update(id, description)
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(writer, "Task 2 updated to %q\n", description)
+	return nil
+}
+
 func argsToInts(args []string) ([]int, error) {
 	nums := make([]int, len(args))
 

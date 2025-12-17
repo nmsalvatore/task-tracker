@@ -561,9 +561,70 @@ func TestCLI_Mark(t *testing.T) {
 }
 
 func TestCLI_Update(t *testing.T) {
-	t.Run("successful", func(t *testing.T) {})
+	t.Run("successful", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one", "two")
 
-	t.Run("not two arguments", func(t *testing.T) {})
+		description := "eat tacos"
 
-	t.Run("invalid id", func(t *testing.T) {})
+		err := cli.Update(io.Discard, []string{"1", description})
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got := cli.tasks.Get()
+
+		if got[0].Description != description {
+			t.Errorf("got message %q, want %q", got[0].Description, description)
+		}
+	})
+
+	t.Run("message", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one", "two")
+
+		buf := bytes.Buffer{}
+
+		err := cli.Update(&buf, []string{"2", "party"})
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got := buf.String()
+		want := "Task 2 updated to \"party\"\n"
+
+		if got != want {
+			t.Errorf("got message %q, want %q", got, want)
+		}
+	})
+
+	t.Run("more than two arguments", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one", "two")
+
+		err := cli.Update(io.Discard, []string{"2", "1", "party"})
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+	})
+
+	t.Run("less than two arguments", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one", "two")
+
+		err := cli.Update(io.Discard, []string{"1"})
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+	})
+
+	t.Run("invalid id", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one", "two")
+
+		err := cli.Update(io.Discard, []string{"3", "pizza party"})
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+	})
 }
