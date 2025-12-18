@@ -10,7 +10,7 @@ func PrintTasks(writer io.Writer, tasks []Task) {
 	message := &strings.Builder{}
 
 	if len(tasks) == 0 {
-		message.WriteString("Task list is empty\n")
+		message.WriteString("task list empty\n")
 	}
 
 	for _, task := range tasks {

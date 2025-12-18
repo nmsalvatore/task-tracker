@@ -38,7 +38,7 @@ func (c *CLI) Add(writer io.Writer, args []string) error {
 	}
 
 	for _, task := range descriptions {
-		fmt.Fprintf(writer, "Added task %q\n", task)
+		fmt.Fprintf(writer, "added task %q\n", task)
 	}
 
 	return nil
@@ -47,7 +47,7 @@ func (c *CLI) Add(writer io.Writer, args []string) error {
 func (c *CLI) Clear(writer io.Writer, args []string) error {
 	if len(args) == 0 {
 		c.tasks.Clear()
-		fmt.Fprintln(writer, "Cleared all tasks")
+		fmt.Fprintln(writer, "cleared all tasks")
 		return nil
 	}
 
@@ -58,7 +58,7 @@ func (c *CLI) Clear(writer io.Writer, args []string) error {
 		return err
 	}
 
-	fmt.Fprintf(writer, "Cleared all tasks with status %q\n", status)
+	fmt.Fprintf(writer, "cleared tasks with status %q\n", status)
 	return nil
 }
 
@@ -78,8 +78,28 @@ func (c *CLI) Delete(writer io.Writer, args []string) error {
 	}
 
 	for _, id := range ids {
-		fmt.Fprintf(writer, "Deleted task %d\n", id)
+		fmt.Fprintf(writer, "task %d deleted\n", id)
 	}
+	return nil
+}
+
+func (c *CLI) Help(writer io.Writer, args []string) error {
+	message := `A dead-simple command line task tracker.
+
+task management:
+  add		Add tasks
+  clear		Clear tasks
+  delete	Delete tasks
+  list		List tasks
+  mark		Mark task status (todo, in-progress, done)
+  update	Update task description
+
+application information:
+  help		Application and command information
+  version	Application version
+`
+
+	fmt.Fprint(writer, message)
 	return nil
 }
 
@@ -121,7 +141,7 @@ func (c *CLI) Mark(writer io.Writer, args []string) error {
 	}
 
 	for _, id := range ids {
-		fmt.Fprintf(writer, "Task %d marked %q\n", id, status)
+		fmt.Fprintf(writer, "task %d marked %q\n", id, status)
 	}
 	return nil
 }
@@ -147,7 +167,7 @@ func (c *CLI) Update(writer io.Writer, args []string) error {
 		return err
 	}
 
-	fmt.Fprintf(writer, "Task %d updated to %q\n", id, description)
+	fmt.Fprintf(writer, "task %d description updated to %q\n", id, description)
 	return nil
 }
 

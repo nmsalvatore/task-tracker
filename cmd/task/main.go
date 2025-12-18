@@ -14,12 +14,18 @@ func main() {
 }
 
 func run() error {
-	dir, err := os.UserHomeDir()
+	home, err := os.UserHomeDir()
 	if err != nil {
 		return fmt.Errorf("getting home directory: %v", err)
 	}
 
-	cli := NewCLI(dir + "/.tasks.json")
+	dir := home + "/.tasks"
+	err = os.Mkdir(dir, 0750)
+	if err != nil && !os.IsExist(err) {
+		return fmt.Errorf("creating data directory: %v", err)
+	}
+
+	cli := NewCLI(dir + "/tasks.json")
 	err = cli.tasks.Load(cli.filename)
 	if err != nil {
 		return fmt.Errorf("loading tasks: %v", err)
@@ -34,6 +40,8 @@ func run() error {
 		err = cli.Clear(os.Stdout, args)
 	case "delete":
 		err = cli.Delete(os.Stdout, args)
+	case "help":
+		err = cli.Help(os.Stdout, args)
 	case "list":
 		err = cli.List(os.Stdout, args)
 	case "mark":

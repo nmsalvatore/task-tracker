@@ -57,7 +57,7 @@ func TestCLI_Add(t *testing.T) {
 		}
 
 		got := buf.String()
-		want := "Added task \"one\"\n"
+		want := "added task \"one\"\n"
 
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)
@@ -74,7 +74,7 @@ func TestCLI_Add(t *testing.T) {
 		}
 
 		got := buf.String()
-		want := "Added task \"one\"\nAdded task \"two\"\n"
+		want := "added task \"one\"\nadded task \"two\"\n"
 
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)
@@ -213,7 +213,7 @@ func TestCLI_Clear(t *testing.T) {
 		}
 
 		got := buf.String()
-		want := "Cleared all tasks\n"
+		want := "cleared all tasks\n"
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)
 		}
@@ -239,7 +239,7 @@ func TestCLI_Clear(t *testing.T) {
 		}
 
 		got := buf.String()
-		want := "Cleared all tasks with status \"done\"\n"
+		want := "cleared tasks with status \"done\"\n"
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)
 		}
@@ -326,7 +326,7 @@ func TestCLI_Delete(t *testing.T) {
 		}
 
 		got := buf.String()
-		want := "Deleted task 1\n"
+		want := "task 1 deleted\n"
 
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)
@@ -344,7 +344,7 @@ func TestCLI_Delete(t *testing.T) {
 		}
 
 		got := buf.String()
-		want := "Deleted task 1\nDeleted task 3\n"
+		want := "task 1 deleted\ntask 3 deleted\n"
 
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)
@@ -360,7 +360,7 @@ func TestCLI_List(t *testing.T) {
 		cli.List(&buf, nil)
 
 		got := buf.String()
-		want := "Task list is empty\n"
+		want := "task list empty\n"
 
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)
@@ -542,7 +542,7 @@ func TestCLI_Mark(t *testing.T) {
 		}
 
 		got := buf.String()
-		want := fmt.Sprintf("Task 1 marked %q\n", status)
+		want := fmt.Sprintf("task 1 marked %q\n", status)
 
 		if got != want {
 			t.Errorf("got message %q, want %q", got, want)
@@ -562,7 +562,7 @@ func TestCLI_Mark(t *testing.T) {
 		}
 
 		got := buf.String()
-		want := fmt.Sprintf("Task 1 marked %q\nTask 2 marked %q\n", status, status)
+		want := fmt.Sprintf("task 1 marked %q\ntask 2 marked %q\n", status, status)
 
 		if got != want {
 			t.Errorf("got message %q, want %q", got, want)
@@ -601,7 +601,7 @@ func TestCLI_Update(t *testing.T) {
 		}
 
 		got := buf.String()
-		want := "Task 2 updated to \"party\"\n"
+		want := "task 2 description updated to \"party\"\n"
 
 		if got != want {
 			t.Errorf("got message %s, want %q", got, want)
