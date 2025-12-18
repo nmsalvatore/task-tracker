@@ -38,7 +38,11 @@ func (c *CLI) Add(writer io.Writer, args []string) error {
 	}
 
 	for _, task := range descriptions {
-		fmt.Fprintf(writer, "added task %q\n", task)
+		if status != "" {
+			fmt.Fprintf(writer, "added task %q, marked %s\n", task, status)
+		} else {
+			fmt.Fprintf(writer, "added task %q\n", task)
+		}
 	}
 
 	return nil
@@ -58,7 +62,7 @@ func (c *CLI) Clear(writer io.Writer, args []string) error {
 		return err
 	}
 
-	fmt.Fprintf(writer, "cleared tasks with status %q\n", status)
+	fmt.Fprintf(writer, "cleared all tasks marked %s\n", status)
 	return nil
 }
 

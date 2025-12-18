@@ -239,7 +239,7 @@ func TestCLI_Clear(t *testing.T) {
 		}
 
 		got := buf.String()
-		want := "cleared tasks with status \"done\"\n"
+		want := "cleared all tasks marked done\n"
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)
 		}
