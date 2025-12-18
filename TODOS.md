@@ -19,9 +19,9 @@
 - [x] Add
 - [x] Clear
 - [x] Delete
-- [ ] List (more tests)
-- [ ] Mark
-- [ ] Update
+- [x] List
+- [x] Mark
+- [x] Update
 - [ ] Help
 - [ ] Version
 
@@ -29,4 +29,8 @@
 
 - [ ] Error handling in tasks_test.go
 - [ ] Error handling in display_test.go
-- [ ] Save files in home directory
+- [ ] Better error messages
+- [x] Save files in home directory
+- [x] Bold in progress
+- [x] Strikethrough done
+- [ ] Good README
