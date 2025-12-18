@@ -50,6 +50,10 @@ func run() error {
 		err = cli.Update(os.Stdout, args)
 	}
 
+	if err != nil {
+		return err
+	}
+
 	err = cli.tasks.Save(cli.filename)
 	if err != nil {
 		return fmt.Errorf("saving tasks: %v", err)
