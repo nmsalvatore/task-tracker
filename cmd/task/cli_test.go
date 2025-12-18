@@ -392,7 +392,7 @@ func TestCLI_List(t *testing.T) {
 		cli.List(&buf, []string{"in-progress"})
 
 		got := buf.String()
-		want := "> 3: three\n> 4: four\n"
+		want := fmt.Sprintf("> 3: %s\n> 4: %s\n", Bold("three"), Bold("four"))
 
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)
@@ -409,7 +409,7 @@ func TestCLI_List(t *testing.T) {
 		cli.List(&buf, []string{"done"})
 
 		got := buf.String()
-		want := "× 5: five\n× 6: six\n"
+		want := fmt.Sprintf("× 5: %s\n× 6: %s\n", Strike("five"), Strike("six"))
 
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)
@@ -524,6 +524,16 @@ func TestCLI_Mark(t *testing.T) {
 		cli.tasks.Add("", "one")
 
 		err := cli.Mark(io.Discard, []string{"1", "2", "done"})
+		if err == nil {
+			t.Error("wanted error, but didn't get one")
+		}
+	})
+
+	t.Run("status first", func(t *testing.T) {
+		cli := NewCLI(filename)
+		cli.tasks.Add("", "one")
+
+		err := cli.Mark(io.Discard, []string{"done", "1"})
 		if err == nil {
 			t.Error("wanted error, but didn't get one")
 		}

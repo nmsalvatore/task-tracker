@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"testing"
 )
 
@@ -59,7 +60,7 @@ func TestDisplay_PrintTasks(t *testing.T) {
 		PrintTasks(&buffer, tasks.Get())
 
 		got := buffer.String()
-		want := "> 1: build task tracker\n"
+		want := fmt.Sprintf("> 1: %s\n", Bold("build task tracker"))
 
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)
@@ -74,7 +75,7 @@ func TestDisplay_PrintTasks(t *testing.T) {
 		PrintTasks(&buffer, tasks.Get())
 
 		got := buffer.String()
-		want := "× 1: drink coffee\n"
+		want := fmt.Sprintf("× 1: %s\n", Strike("drink coffee"))
 
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)
@@ -91,7 +92,7 @@ func TestDisplay_PrintTasks(t *testing.T) {
 		PrintTasks(&buffer, items)
 
 		got := buffer.String()
-		want := "× 2: second\n"
+		want := fmt.Sprintf("× 2: %s\n", Strike("second"))
 
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)
