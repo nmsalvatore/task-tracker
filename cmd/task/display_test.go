@@ -3,8 +3,41 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"strings"
 	"testing"
 )
+
+func TestDisplay_HelpMessages(t *testing.T) {
+	t.Run("app help message", func(t *testing.T) {
+		buf := bytes.Buffer{}
+		PrintAppHelp(&buf)
+
+		got := buf.String()
+		want := "A simple command line task tracker"
+
+		if !strings.Contains(got, want) {
+			t.Errorf("%q not found in %q", want, got)
+		}
+	})
+
+	t.Run("add help message", func(t *testing.T) {
+		buf := bytes.Buffer{}
+		PrintAddHelp(&buf)
+
+		got := buf.String()
+		want := []string{
+			"usage: task add DESCRIPTIONS",
+			`task add "go to the store"`,
+			`task add "meal prep" "go on a walk"`,
+		}
+
+		for i := range want {
+			if !strings.Contains(got, want[i]) {
+				t.Errorf("%q not found in %q", want[i], got)
+			}
+		}
+	})
+}
 
 func TestDisplay_PrintTasks(t *testing.T) {
 	t.Run("no tasks message", func(t *testing.T) {

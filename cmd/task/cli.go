@@ -88,22 +88,17 @@ func (c *CLI) Delete(writer io.Writer, args []string) error {
 }
 
 func (c *CLI) Help(writer io.Writer, args []string) error {
-	message := `A dead-simple command line task tracker.
+	if len(args) == 0 {
+		PrintAppHelp(writer)
+		return nil
+	}
 
-task management:
-  add		Add tasks
-  clear		Clear tasks
-  delete	Delete tasks
-  list		List tasks
-  mark		Mark task status (todo, in-progress, done)
-  update	Update task description
+	cmd := args[0]
+	switch cmd {
+	case "add":
+		PrintAddHelp(writer)
+	}
 
-application information:
-  help		Application and command information
-  version	Application version
-`
-
-	fmt.Fprint(writer, message)
 	return nil
 }
 

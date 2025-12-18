@@ -6,6 +6,42 @@ import (
 	"strings"
 )
 
+func PrintAppHelp(writer io.Writer) {
+	message := `A simple command line task tracker.
+
+task management:
+  add		Add tasks
+  clear		Clear tasks
+  delete	Delete tasks
+  list		List tasks
+  mark		Mark task status
+  update	Update task description
+
+application information:
+  help		Application and command information
+  version	Application version
+`
+
+	fmt.Fprint(writer, message)
+}
+
+func PrintAddHelp(writer io.Writer) {
+	message := `Add one or more tasks to the task list.
+
+usage: task add DESCRIPTIONS [OPTIONS]
+
+options:
+  --status	Set the task status
+
+examples:
+  task add "go to the store"
+  task add "meal prep" "go on a walk"
+  task add "drink coffee" --status done
+  task add --status in-progress "play with task tracker"
+`
+	fmt.Fprint(writer, message)
+}
+
 func PrintTasks(writer io.Writer, tasks []Task) {
 	message := &strings.Builder{}
 
