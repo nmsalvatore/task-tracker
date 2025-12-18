@@ -23,7 +23,11 @@ func TestDisplay_PrintTasks(t *testing.T) {
 
 	t.Run("single task", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "drink coffee")
+
+		err := tasks.Add("", "drink coffee")
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		buffer := bytes.Buffer{}
 		PrintTasks(&buffer, tasks.Get())
@@ -39,7 +43,11 @@ func TestDisplay_PrintTasks(t *testing.T) {
 	t.Run("multiple tasks", func(t *testing.T) {
 		tasks := Tasks{}
 		descriptions := []string{"do a little dance", "make a little love"}
-		tasks.Add("", descriptions...)
+
+		err := tasks.Add("", descriptions...)
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		buffer := bytes.Buffer{}
 		PrintTasks(&buffer, tasks.Get())
@@ -54,7 +62,11 @@ func TestDisplay_PrintTasks(t *testing.T) {
 
 	t.Run("single task in progress", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("in-progress", "build task tracker")
+
+		err := tasks.Add("in-progress", "build task tracker")
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		buffer := bytes.Buffer{}
 		PrintTasks(&buffer, tasks.Get())
@@ -69,7 +81,11 @@ func TestDisplay_PrintTasks(t *testing.T) {
 
 	t.Run("single task done", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("done", "drink coffee")
+
+		err := tasks.Add("done", "drink coffee")
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		buffer := bytes.Buffer{}
 		PrintTasks(&buffer, tasks.Get())
@@ -84,8 +100,16 @@ func TestDisplay_PrintTasks(t *testing.T) {
 
 	t.Run("by status", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "first", "second", "third")
-		tasks.Mark("done", 2)
+
+		err := tasks.Add("", "first", "second", "third")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Mark("done", 2)
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		buffer := bytes.Buffer{}
 		items, _ := tasks.GetByStatus("done")
