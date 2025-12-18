@@ -8,10 +8,13 @@ import (
 func TestTasks_Add(t *testing.T) {
 	t.Run("single task", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "drink coffee")
+
+		err := tasks.Add("", "drink coffee")
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		got := tasks.Get()
-
 		if len(got) != 1 {
 			t.Errorf("got %d tasks, want 1", len(got))
 		}
@@ -19,10 +22,12 @@ func TestTasks_Add(t *testing.T) {
 
 	t.Run("multiple tasks", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "do a little dance", "make a little love", "get down tonight")
+		err := tasks.Add("", "do a little dance", "make a little love", "get down tonight")
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		got := tasks.Get()
-
 		if len(got) != 3 {
 			t.Errorf("got %d tasks, want 3", len(got))
 		}
@@ -31,10 +36,13 @@ func TestTasks_Add(t *testing.T) {
 	t.Run("id", func(t *testing.T) {
 		tasks := Tasks{}
 		description := "fly to the moon"
-		tasks.Add("", description)
+
+		err := tasks.Add("", description)
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		got := tasks.Get()
-
 		if got[0].ID != 1 {
 			t.Errorf("got %d, want %d", got[0].ID, 1)
 		}
@@ -42,12 +50,23 @@ func TestTasks_Add(t *testing.T) {
 
 	t.Run("id after delete", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "one", "two", "three", "four")
-		tasks.Delete(2)
-		tasks.Add("", "five")
+
+		err := tasks.Add("", "one", "two", "three", "four")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Delete(2)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Add("", "five")
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		got := tasks.Get()
-
 		if got[3].ID != 5 {
 			t.Errorf("got %d, want %d", got[3].ID, 5)
 		}
@@ -56,10 +75,13 @@ func TestTasks_Add(t *testing.T) {
 	t.Run("description", func(t *testing.T) {
 		tasks := Tasks{}
 		description := "drink coffee"
-		tasks.Add("", description)
+
+		err := tasks.Add("", description)
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		got := tasks.Get()
-
 		if got[0].Description != description {
 			t.Errorf("got %q, want %q", got[0].Description, description)
 		}
@@ -67,10 +89,13 @@ func TestTasks_Add(t *testing.T) {
 
 	t.Run("status default", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "go on a walk")
+
+		err := tasks.Add("", "go on a walk")
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		got := tasks.Get()
-
 		if got[0].Status != "todo" {
 			t.Errorf("got %q, want %q", got[0].Status, "todo")
 		}
@@ -79,10 +104,13 @@ func TestTasks_Add(t *testing.T) {
 	t.Run("status specified", func(t *testing.T) {
 		tasks := Tasks{}
 		status := "in-progress"
-		tasks.Add(status, "go on a walk")
+
+		err := tasks.Add(status, "go on a walk")
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		got := tasks.Get()
-
 		if got[0].Status != status {
 			t.Errorf("got %q, want %q", got[0].Status, "in-progress")
 		}
@@ -91,10 +119,13 @@ func TestTasks_Add(t *testing.T) {
 	t.Run("status on multiples", func(t *testing.T) {
 		tasks := Tasks{}
 		status := "in-progress"
-		tasks.Add(status, "go on a walk", "live the dream")
+
+		err := tasks.Add(status, "go on a walk", "live the dream")
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		got := tasks.Get()
-
 		for i := range got {
 			if got[i].Status != status {
 				t.Errorf("got %q, want %q", got[i].Status, "in-progress")
@@ -104,6 +135,7 @@ func TestTasks_Add(t *testing.T) {
 
 	t.Run("status rejected", func(t *testing.T) {
 		tasks := Tasks{}
+
 		err := tasks.Add("dude", "go on a walk")
 		if err == nil {
 			t.Error("wanted error but didn't get one")
@@ -112,11 +144,18 @@ func TestTasks_Add(t *testing.T) {
 
 	t.Run("created at", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "first")
-		tasks.Add("", "second")
+
+		err := tasks.Add("", "first")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Add("", "second")
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		got := tasks.Get()
-
 		if !got[0].CreatedAt.Before(got[1].CreatedAt) {
 			t.Errorf("first not created before second")
 		}
@@ -125,12 +164,20 @@ func TestTasks_Add(t *testing.T) {
 
 func TestTasks_Clear(t *testing.T) {
 	tasks := Tasks{}
-	tasks.Add("", "first", "second", "third")
-	tasks.Add("done", "fourth", "fifth")
+
+	err := tasks.Add("", "first", "second", "third")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = tasks.Add("done", "fourth", "fifth")
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	tasks.Clear()
 
 	got := tasks.Get()
-
 	if len(got) != 0 {
 		t.Errorf("got length %d, want 0", len(got))
 	}
@@ -139,12 +186,23 @@ func TestTasks_Clear(t *testing.T) {
 func TestTasks_ClearByStatus(t *testing.T) {
 	t.Run("valid status", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "first", "second", "third")
-		tasks.Add("done", "fourth", "fifth")
-		tasks.ClearByStatus("done")
+
+		err := tasks.Add("", "first", "second", "third")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Add("done", "fourth", "fifth")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.ClearByStatus("done")
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		got := tasks.Get()
-
 		if len(got) != 3 {
 			t.Fatalf("got length %d, want 3", len(got))
 		}
@@ -159,10 +217,18 @@ func TestTasks_ClearByStatus(t *testing.T) {
 
 	t.Run("invalid status", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "first", "second", "third")
-		tasks.Add("done", "fourth", "fifth")
 
-		err := tasks.ClearByStatus("beans")
+		err := tasks.Add("", "first", "second", "third")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Add("done", "fourth", "fifth")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.ClearByStatus("beans")
 		if err == nil {
 			t.Error("wanted error, but didn't get one")
 		}
@@ -172,11 +238,18 @@ func TestTasks_ClearByStatus(t *testing.T) {
 func TestTasks_Delete(t *testing.T) {
 	t.Run("single task", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "first", "second", "third")
-		tasks.Delete(2)
+
+		err := tasks.Add("", "first", "second", "third")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Delete(2)
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		got := tasks.Get()
-
 		for _, task := range got {
 			if task.Description == "second" {
 				t.Error("task not deleted")
@@ -190,12 +263,20 @@ func TestTasks_Delete(t *testing.T) {
 
 	t.Run("multiple tasks", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "first", "second", "third")
-		tasks.Delete(2, 3)
+
+		err := tasks.Add("", "first", "second", "third")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Delete(2, 3)
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		got := tasks.Get()
-
 		deleted := []string{"second", "third"}
+
 		for _, task := range got {
 			if slices.Contains(deleted, task.Description) {
 				t.Errorf("%q not deleted", task.Description)
@@ -213,9 +294,13 @@ func TestTasks_Delete(t *testing.T) {
 
 	t.Run("some valid ids, some invalid", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "first", "second", "third")
 
-		err := tasks.Delete(2, 3, 4)
+		err := tasks.Add("", "first", "second", "third")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Delete(2, 3, 4)
 		if err == nil {
 			t.Error("wanted error, but didn't get one")
 		}
@@ -230,10 +315,21 @@ func TestTasks_Delete(t *testing.T) {
 func TestTasks_GetByStatus(t *testing.T) {
 	t.Run("done", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "first", "second", "third", "fourth")
-		tasks.Mark("done", 3, 4)
 
-		got, _ := tasks.GetByStatus("done")
+		err := tasks.Add("", "first", "second", "third", "fourth")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Mark("done", 3, 4)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got, err := tasks.GetByStatus("done")
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		if len(got) != 2 {
 			t.Fatalf("got %d tasks, want 2", len(got))
@@ -249,10 +345,21 @@ func TestTasks_GetByStatus(t *testing.T) {
 
 	t.Run("in-progress", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "first", "second", "third", "fourth")
-		tasks.Mark("in-progress", 3, 4)
 
-		got, _ := tasks.GetByStatus("in-progress")
+		err := tasks.Add("", "first", "second", "third", "fourth")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Mark("in-progress", 3, 4)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got, err := tasks.GetByStatus("in-progress")
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		if len(got) != 2 {
 			t.Fatalf("got %d tasks, want 2", len(got))
@@ -268,10 +375,21 @@ func TestTasks_GetByStatus(t *testing.T) {
 
 	t.Run("todo", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "first", "second", "third", "fourth")
-		tasks.Mark("done", 3, 4)
 
-		got, _ := tasks.GetByStatus("todo")
+		err := tasks.Add("", "first", "second", "third", "fourth")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Mark("done", 3, 4)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got, err := tasks.GetByStatus("todo")
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		if len(got) != 2 {
 			t.Fatalf("got %d tasks, want 2", len(got))
@@ -287,11 +405,18 @@ func TestTasks_GetByStatus(t *testing.T) {
 
 	t.Run("invalid status", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("done", "first", "second", "third", "fourth")
-		tasks.Mark("todo", 3, 4)
 
-		_, err := tasks.GetByStatus("beans")
+		err := tasks.Add("done", "first", "second", "third", "fourth")
+		if err != nil {
+			t.Fatal(err)
+		}
 
+		err = tasks.Mark("todo", 3, 4)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		_, err = tasks.GetByStatus("beans")
 		if err == nil {
 			t.Errorf("wanted error, but didn't get one")
 		}
@@ -299,33 +424,125 @@ func TestTasks_GetByStatus(t *testing.T) {
 }
 
 func TestTasks_Mark(t *testing.T) {
-	t.Run("single task", func(t *testing.T) {
+	t.Run("single task, in-progress", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "first", "second")
-		tasks.Add("done", "third")
+		status := "in-progress"
 
-		tasks.Mark("in-progress", 1)
-		tasks.Mark("done", 2)
-		tasks.Mark("todo", 3)
+		err := tasks.Add("", "first", "second")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Mark(status, 1)
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		got := tasks.Get()
+		if got[0].Status != status {
+			t.Errorf("got %q, want %q", got[0].Status, status)
+		}
+	})
 
-		for i, status := range []string{"in-progress", "done", "todo"} {
+	t.Run("single task, done", func(t *testing.T) {
+		tasks := Tasks{}
+		status := "done"
+
+		err := tasks.Add("", "first", "second")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Mark(status, 1)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got := tasks.Get()
+		if got[0].Status != status {
+			t.Errorf("got %q, want %q", got[0].Status, status)
+		}
+	})
+
+	t.Run("single task, todo", func(t *testing.T) {
+		tasks := Tasks{}
+		status := "todo"
+
+		err := tasks.Add("done", "first", "second")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Mark(status, 1)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got := tasks.Get()
+		if got[0].Status != status {
+			t.Errorf("got %q, want %q", got[0].Status, status)
+		}
+	})
+
+	t.Run("multiple tasks, in-progress", func(t *testing.T) {
+		tasks := Tasks{}
+		status := "in-progress"
+
+		err := tasks.Add("", "first", "second", "third")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Mark(status, 1, 2)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got := tasks.Get()
+		for i := range 2 {
 			if got[i].Status != status {
 				t.Errorf("got %q, want %q", got[i].Status, status)
 			}
 		}
 	})
 
-	t.Run("multiple tasks", func(t *testing.T) {
+	t.Run("multiple tasks, done", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "first", "second", "third")
+		status := "done"
 
-		status := "in-progress"
-		tasks.Mark(status, 1, 2)
+		err := tasks.Add("", "first", "second", "third")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Mark(status, 1, 2)
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		got := tasks.Get()
+		for i := range 2 {
+			if got[i].Status != status {
+				t.Errorf("got %q, want %q", got[i].Status, status)
+			}
+		}
+	})
 
+	t.Run("multiple tasks, todo", func(t *testing.T) {
+		tasks := Tasks{}
+		status := "todo"
+
+		err := tasks.Add("done", "first", "second", "third")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Mark(status, 1, 2)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got := tasks.Get()
 		for i := range 2 {
 			if got[i].Status != status {
 				t.Errorf("got %q, want %q", got[i].Status, status)
@@ -335,9 +552,13 @@ func TestTasks_Mark(t *testing.T) {
 
 	t.Run("empty status", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "first")
 
-		err := tasks.Mark("", 1)
+		err := tasks.Add("", "first")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Mark("", 1)
 		if err == nil {
 			t.Error("wanted error, but didn't get one")
 		}
@@ -345,9 +566,13 @@ func TestTasks_Mark(t *testing.T) {
 
 	t.Run("invalid status", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "first")
 
-		err := tasks.Mark("gettin' it", 1)
+		err := tasks.Add("", "first")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Mark("gettin' it", 1)
 		if err == nil {
 			t.Error("wanted error, but didn't get one")
 		}
@@ -355,11 +580,18 @@ func TestTasks_Mark(t *testing.T) {
 
 	t.Run("update time", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "first")
-		tasks.Mark("in-progress", 1)
+
+		err := tasks.Add("", "first")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Mark("in-progress", 1)
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		got := tasks.Get()
-
 		if got[0].UpdatedAt.Equal(got[0].CreatedAt) {
 			t.Error("time not updated")
 		}
@@ -367,9 +599,13 @@ func TestTasks_Mark(t *testing.T) {
 
 	t.Run("invalid id", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "sip tea")
 
-		err := tasks.Mark("in-progress", 2)
+		err := tasks.Add("", "sip tea")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Mark("in-progress", 2)
 		if err == nil {
 			t.Error("wanted error, but didn't get one")
 		}
@@ -378,15 +614,18 @@ func TestTasks_Mark(t *testing.T) {
 
 	t.Run("some valid ids, some invalid", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "first", "second", "third")
 
-		err := tasks.Mark("done", 2, 3, 4)
+		err := tasks.Add("", "first", "second", "third")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Mark("done", 2, 3, 4)
 		if err == nil {
 			t.Fatal("wanted error, but didn't get one")
 		}
 
 		got := tasks.Get()
-
 		for _, task := range got {
 			if task.Status != "todo" {
 				t.Errorf("got status %q, want \"todo\"", task.Status)
@@ -398,11 +637,18 @@ func TestTasks_Mark(t *testing.T) {
 func TestTasks_Update(t *testing.T) {
 	t.Run("single task", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "first", "third")
-		tasks.Update(2, "second")
+
+		err := tasks.Add("", "first", "third")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Update(2, "second")
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		got := tasks.Get()
-
 		if got[1].Description != "second" {
 			t.Errorf("got %q, want %q", got, "second")
 		}
@@ -410,9 +656,13 @@ func TestTasks_Update(t *testing.T) {
 
 	t.Run("invalid id", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "first", "third")
 
-		err := tasks.Update(3, "second")
+		err := tasks.Add("", "first", "third")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Update(3, "second")
 		if err == nil {
 			t.Error("wanted error, but didn't get one")
 		}
@@ -420,11 +670,18 @@ func TestTasks_Update(t *testing.T) {
 
 	t.Run("timestamp updated", func(t *testing.T) {
 		tasks := Tasks{}
-		tasks.Add("", "first", "third")
-		tasks.Update(2, "second")
+
+		err := tasks.Add("", "first", "third")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = tasks.Update(2, "second")
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		got := tasks.Get()
-
 		if got[1].UpdatedAt.Equal(got[1].CreatedAt) {
 			t.Error("timestamp not updated")
 		}
