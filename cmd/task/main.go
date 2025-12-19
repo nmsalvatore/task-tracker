@@ -31,9 +31,10 @@ func run() error {
 		return fmt.Errorf("loading tasks: %v", err)
 	}
 
+	cmd := os.Args[1]
 	args := os.Args[2:]
 
-	switch os.Args[1] {
+	switch cmd {
 	case "add":
 		err = cli.Add(os.Stdout, args)
 	case "clear":
@@ -48,6 +49,8 @@ func run() error {
 		err = cli.Mark(os.Stdout, args)
 	case "update":
 		err = cli.Update(os.Stdout, args)
+	default:
+		err = fmt.Errorf("no command %q", cmd)
 	}
 
 	if err != nil {
