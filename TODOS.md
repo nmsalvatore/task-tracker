@@ -22,13 +22,13 @@
 - [x] List
 - [x] Mark
 - [x] Update
-- [ ] Help
+- [x] Help
 - [ ] Version
 
 ## Miscellaneous
 
-- [ ] Error handling in tasks_test.go
-- [ ] Error handling in display_test.go
+- [x] Error handling in tasks_test.go
+- [x] Error handling in display_test.go
 - [ ] Better error messages
 - [x] Save files in home directory
 - [x] Bold in progress
