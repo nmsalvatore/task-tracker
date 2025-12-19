@@ -50,7 +50,7 @@ func run() error {
 	case "update":
 		err = cli.Update(os.Stdout, args)
 	default:
-		err = fmt.Errorf("no command %q", cmd)
+		err = fmt.Errorf("no command '%s'", cmd)
 	}
 
 	if err != nil {

@@ -112,7 +112,7 @@ func (c *CLI) Help(writer io.Writer, args []string) error {
 	case "version":
 		PrintVersionHelp(writer)
 	default:
-		return fmt.Errorf("no command %q", cmd)
+		return fmt.Errorf("no command '%s'", cmd)
 	}
 
 	return nil
