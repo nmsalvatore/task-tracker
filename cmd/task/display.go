@@ -18,8 +18,10 @@ task management:
   update	Update task description
 
 application information:
-  help		Application and command information
+  help		Application usage information
   version	Application version
+
+Use 'task help COMMAND' for specific usage information about the above commands.
 `
 
 	fmt.Fprint(writer, message)
@@ -31,13 +33,100 @@ func PrintAddHelp(writer io.Writer) {
 usage: task add DESCRIPTIONS [OPTIONS]
 
 options:
-  --status	Set the task status
+  --status	Set the task status (todo, in-progress, done)
 
 examples:
   task add "go to the store"
   task add "meal prep" "go on a walk"
   task add "drink coffee" --status done
   task add --status in-progress "play with task tracker"
+`
+	fmt.Fprint(writer, message)
+}
+
+func PrintClearHelp(writer io.Writer) {
+	message := `Clear tasks from the task list, either entirely or by status.
+
+usage: task clear [STATUS]
+
+examples:
+  task clear
+  task clear done
+  task clear in-progress
+  task clear todo
+`
+	fmt.Fprint(writer, message)
+}
+
+func PrintDeleteHelp(writer io.Writer) {
+	message := `Delete individual tasks from the task list.
+
+usage: task delete IDS
+
+examples:
+  task delete 1
+  task delete 1 2 3
+`
+	fmt.Fprint(writer, message)
+}
+
+func PrintHelpHelp(writer io.Writer) {
+	message := `Usage information about the application or a specific command.
+
+usage: task help [COMMAND]
+
+examples:
+  task help
+  task help add
+`
+	fmt.Fprint(writer, message)
+}
+
+func PrintListHelp(writer io.Writer) {
+	message := `List tasks, either entirely or by status.
+
+usage: task list [STATUS]
+
+examples:
+  task list
+  task list todo
+  task list in-progress
+  task list done
+`
+	fmt.Fprint(writer, message)
+}
+
+func PrintMarkHelp(writer io.Writer) {
+	message := `Mark task status. Status must be todo, in-progress, or done.
+
+usage: task mark IDS STATUS
+
+examples:
+  task mark 1 done
+  task mark 1 2 3 in-progress
+  task mark 4 todo
+`
+	fmt.Fprint(writer, message)
+}
+
+func PrintUpdateHelp(writer io.Writer) {
+	message := `Update task description.
+
+usage: task update ID DESCRIPTION
+
+examples:
+  task update 1 "new task description"
+`
+	fmt.Fprint(writer, message)
+}
+
+func PrintVersionHelp(writer io.Writer) {
+	message := `Display application version.
+
+usage: task version
+
+examples:
+  task version
 `
 	fmt.Fprint(writer, message)
 }

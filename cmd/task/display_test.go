@@ -37,6 +37,126 @@ func TestDisplay_HelpMessages(t *testing.T) {
 			}
 		}
 	})
+
+	t.Run("clear help message", func(t *testing.T) {
+		buf := bytes.Buffer{}
+		PrintClearHelp(&buf)
+
+		got := buf.String()
+		want := []string{
+			"usage: task clear [STATUS]",
+			"task clear",
+			"task clear done",
+			"task clear in-progress",
+		}
+
+		for i := range want {
+			if !strings.Contains(got, want[i]) {
+				t.Errorf("%q not found in %q", want[i], got)
+			}
+		}
+	})
+
+	t.Run("delete help message", func(t *testing.T) {
+		buf := bytes.Buffer{}
+		PrintDeleteHelp(&buf)
+
+		got := buf.String()
+		want := []string{
+			"usage: task delete IDS",
+			"task delete 1",
+			"task delete 1 2 3",
+		}
+
+		for i := range want {
+			if !strings.Contains(got, want[i]) {
+				t.Errorf("%q not found in %q", want[i], got)
+			}
+		}
+	})
+
+	t.Run("help help message", func(t *testing.T) {
+		buf := bytes.Buffer{}
+		PrintHelpHelp(&buf)
+
+		got := buf.String()
+		want := []string{
+			"usage: task help [COMMAND]",
+			"task help add",
+		}
+
+		for i := range want {
+			if !strings.Contains(got, want[i]) {
+				t.Errorf("%q not found in %q", want[i], got)
+			}
+		}
+	})
+
+	t.Run("list help message", func(t *testing.T) {
+		buf := bytes.Buffer{}
+		PrintListHelp(&buf)
+
+		got := buf.String()
+		want := []string{
+			"usage: task list [STATUS]",
+			"task list",
+			"task list in-progress",
+		}
+
+		for i := range want {
+			if !strings.Contains(got, want[i]) {
+				t.Errorf("%q not found in %q", want[i], got)
+			}
+		}
+	})
+
+	t.Run("mark help message", func(t *testing.T) {
+		buf := bytes.Buffer{}
+		PrintMarkHelp(&buf)
+
+		got := buf.String()
+		want := []string{
+			"usage: task mark IDS STATUS",
+			"task mark 1 done",
+			"task mark 1 2 3 in-progress",
+			"task mark 4 todo",
+		}
+
+		for i := range want {
+			if !strings.Contains(got, want[i]) {
+				t.Errorf("%q not found in %q", want[i], got)
+			}
+		}
+	})
+
+	t.Run("update help message", func(t *testing.T) {
+		buf := bytes.Buffer{}
+		PrintUpdateHelp(&buf)
+
+		got := buf.String()
+		want := []string{
+			"usage: task update ID DESCRIPTION",
+			`task update 1 "new task description"`,
+		}
+
+		for i := range want {
+			if !strings.Contains(got, want[i]) {
+				t.Errorf("%q not found in %q", want[i], got)
+			}
+		}
+	})
+
+	t.Run("version help message", func(t *testing.T) {
+		buf := bytes.Buffer{}
+		PrintVersionHelp(&buf)
+
+		got := buf.String()
+		want := "usage: task version"
+
+		if !strings.Contains(got, want) {
+			t.Errorf("%q not found in %q", want, got)
+		}
+	})
 }
 
 func TestDisplay_PrintTasks(t *testing.T) {

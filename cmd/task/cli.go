@@ -97,6 +97,22 @@ func (c *CLI) Help(writer io.Writer, args []string) error {
 	switch cmd {
 	case "add":
 		PrintAddHelp(writer)
+	case "clear":
+		PrintClearHelp(writer)
+	case "delete":
+		PrintDeleteHelp(writer)
+	case "help":
+		PrintHelpHelp(writer)
+	case "list":
+		PrintListHelp(writer)
+	case "mark":
+		PrintMarkHelp(writer)
+	case "update":
+		PrintUpdateHelp(writer)
+	case "version":
+		PrintVersionHelp(writer)
+	default:
+		return fmt.Errorf("no command %q", cmd)
 	}
 
 	return nil
