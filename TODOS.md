@@ -23,7 +23,7 @@
 - [x] Mark
 - [x] Update
 - [x] Help
-- [ ] Version
+- [x] Version
 
 ## Miscellaneous
 
@@ -33,4 +33,4 @@
 - [x] Save files in home directory
 - [x] Bold in progress
 - [x] Strikethrough done
-- [ ] Good README
+- [x] Good enough README
