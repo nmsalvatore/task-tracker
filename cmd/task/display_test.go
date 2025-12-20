@@ -167,7 +167,7 @@ func TestDisplay_PrintTasks(t *testing.T) {
 		PrintTasks(&buffer, tasks.Get())
 
 		got := buffer.String()
-		want := "task list empty\n"
+		want := "no tasks\n"
 
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)

@@ -360,7 +360,7 @@ func TestCLI_List(t *testing.T) {
 		cli.List(&buf, nil)
 
 		got := buf.String()
-		want := "task list empty\n"
+		want := "no tasks\n"
 
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)
