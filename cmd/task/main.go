@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	appName = "tasks"
+	appName = "task"
 	version = "0.1.0"
 )
 
@@ -28,7 +28,7 @@ func main() {
 	default:
 		err := run(cmd, args)
 		if err != nil {
-			log.Fatalf("run failed: %v", err)
+			log.Fatalf("task: %v", err)
 		}
 	}
 }
@@ -60,7 +60,6 @@ func run(cmd string, args []string) error {
 		err = cli.Delete(os.Stdout, args)
 	case "list":
 		err = cli.List(os.Stdout, args)
-		return nil
 	case "mark":
 		err = cli.Mark(os.Stdout, args)
 	case "update":

@@ -53,7 +53,7 @@ func (t *Tasks) Clear() {
 func (t *Tasks) ClearByStatus(status string) error {
 	err := t.validateStatus(status)
 	if err != nil {
-		return fmt.Errorf("couldn't clear tasks: %v", err)
+		return fmt.Errorf("clearing tasks: %v", err)
 	}
 
 	t.items = slices.DeleteFunc(t.items, func(task Task) bool {
@@ -83,7 +83,7 @@ func (t *Tasks) Get() []Task {
 func (t *Tasks) GetByStatus(status string) ([]Task, error) {
 	err := t.validateStatus(status)
 	if err != nil {
-		return nil, fmt.Errorf("couldn't get tasks: %v", err)
+		return nil, err
 	}
 
 	var tasks []Task
@@ -102,12 +102,12 @@ func (t *Tasks) Load(filename string) error {
 		if os.IsNotExist(err) {
 			return nil
 		}
-		return fmt.Errorf("read data file: %v", err)
+		return fmt.Errorf("reading data file: %v", err)
 	}
 
 	err = json.Unmarshal(data, &t.items)
 	if err != nil {
-		return fmt.Errorf("decode json file: %v", err)
+		return fmt.Errorf("decoding json file: %v", err)
 	}
 
 	return nil
@@ -115,7 +115,7 @@ func (t *Tasks) Load(filename string) error {
 
 func (t *Tasks) Mark(status string, ids ...int) error {
 	if status == "" {
-		return errors.New("mark status empty")
+		return errors.New("no status provided")
 	}
 
 	err := t.validateStatus(status)
@@ -141,12 +141,12 @@ func (t *Tasks) Mark(status string, ids ...int) error {
 func (t *Tasks) Save(filename string) error {
 	data, err := json.MarshalIndent(t.items, "", "  ")
 	if err != nil {
-		return fmt.Errorf("encode json: %v", err)
+		return fmt.Errorf("encoding json: %v", err)
 	}
 
 	err = os.WriteFile(filename, data, 0644)
 	if err != nil {
-		return fmt.Errorf("write data file: %v", err)
+		return fmt.Errorf("writing data file: %v", err)
 	}
 
 	return nil
@@ -174,14 +174,14 @@ func (t *Tasks) getMaxID() (max int) {
 
 func (t *Tasks) validateIds(ids ...int) error {
 	if len(ids) == 0 {
-		return errors.New("must specify a task ID")
+		return errors.New("no id provided")
 	}
 
 	for _, id := range ids {
 		if !slices.ContainsFunc(t.items, func(task Task) bool {
 			return task.ID == id
 		}) {
-			return fmt.Errorf("no task with ID %d", id)
+			return fmt.Errorf("invalid id: %d", id)
 		}
 	}
 	return nil

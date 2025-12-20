@@ -24,17 +24,17 @@ func NewCLI(filename string) *CLI {
 func (c *CLI) Add(writer io.Writer, args []string) error {
 	err := validateAddFlags(args)
 	if err != nil {
-		return err
+		return fmt.Errorf("add: %v", err)
 	}
 
 	status, descriptions, err := parseAddArgs(args)
 	if err != nil {
-		return err
+		return fmt.Errorf("add: %v", err)
 	}
 
 	err = c.tasks.Add(status, descriptions...)
 	if err != nil {
-		return err
+		return fmt.Errorf("add: %v", err)
 	}
 
 	for _, task := range descriptions {
@@ -59,7 +59,7 @@ func (c *CLI) Clear(writer io.Writer, args []string) error {
 
 	err := c.tasks.ClearByStatus(status)
 	if err != nil {
-		return err
+		return fmt.Errorf("clear by status: %v", err)
 	}
 
 	fmt.Fprintf(writer, "cleared all tasks marked %s\n", status)
@@ -68,17 +68,17 @@ func (c *CLI) Clear(writer io.Writer, args []string) error {
 
 func (c *CLI) Delete(writer io.Writer, args []string) error {
 	if len(args) == 0 {
-		return errors.New("no task ID provided")
+		return errors.New("delete: no id provided")
 	}
 
 	ids, err := argsToInts(args)
 	if err != nil {
-		return err
+		return fmt.Errorf("delete: %v", err)
 	}
 
 	err = c.tasks.Delete(ids...)
 	if err != nil {
-		return err
+		return fmt.Errorf("delete: %v", err)
 	}
 
 	for _, id := range ids {
@@ -89,7 +89,7 @@ func (c *CLI) Delete(writer io.Writer, args []string) error {
 
 func (c *CLI) List(writer io.Writer, args []string) error {
 	if len(args) > 1 {
-		return errors.New("too many arguments")
+		return errors.New("list: too many arguments")
 	}
 
 	if len(args) == 0 {
@@ -99,7 +99,7 @@ func (c *CLI) List(writer io.Writer, args []string) error {
 
 	tasks, err := c.tasks.GetByStatus(args[0])
 	if err != nil {
-		return err
+		return fmt.Errorf("list: %v", err)
 	}
 
 	PrintTasks(writer, tasks)
@@ -108,7 +108,7 @@ func (c *CLI) List(writer io.Writer, args []string) error {
 
 func (c *CLI) Mark(writer io.Writer, args []string) error {
 	if len(args) < 2 {
-		return errors.New("missing arguments")
+		return errors.New("mark: missing arguments")
 	}
 
 	li := len(args) - 1
@@ -116,12 +116,12 @@ func (c *CLI) Mark(writer io.Writer, args []string) error {
 
 	ids, err := argsToInts(args[:li])
 	if err != nil {
-		return err
+		return fmt.Errorf("mark: %v", err)
 	}
 
 	err = c.tasks.Mark(status, ids...)
 	if err != nil {
-		return err
+		return fmt.Errorf("mark: %v", err)
 	}
 
 	for _, id := range ids {
@@ -132,23 +132,22 @@ func (c *CLI) Mark(writer io.Writer, args []string) error {
 
 func (c *CLI) Update(writer io.Writer, args []string) error {
 	if len(args) < 2 {
-		return fmt.Errorf("missing arguments")
+		return fmt.Errorf("update: missing arguments")
 	}
 
 	if len(args) > 2 {
-		return fmt.Errorf("too many arguments")
+		return fmt.Errorf("update: too many arguments")
 	}
 
 	id, err := strconv.Atoi(args[0])
 	if err != nil {
-		return err
+		return fmt.Errorf("update: %v", err)
 	}
 
 	description := args[1]
-
 	err = c.tasks.Update(id, description)
 	if err != nil {
-		return err
+		return fmt.Errorf("update: %v", err)
 	}
 
 	fmt.Fprintf(writer, "task %d description updated to %q\n", id, description)
@@ -161,7 +160,7 @@ func argsToInts(args []string) ([]int, error) {
 	for i := range args {
 		num, err := strconv.Atoi(args[i])
 		if err != nil {
-			return nil, fmt.Errorf("convert string to int: %v", err)
+			return nil, fmt.Errorf("converting arguments to ints: %v", err)
 		}
 		nums[i] = num
 	}
