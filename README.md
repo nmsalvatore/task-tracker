@@ -4,7 +4,7 @@ A simple CLI task tracker built with Go. This is one of the roadmap.sh [Backend 
 
 ## Installation
 
-Clone this repo and `cd` into the project's root directory. Build the binary with `make`. Move the binary to `usr/local/bin` or wherever you like to keep your binaries. Do some tasks!
+Clone this repo and `cd` into the project's root directory. Build the binary with `make`. Move the binary to `/usr/local/bin` or wherever you like to keep your binaries. Do some tasks!
 
 ## Usage
 
