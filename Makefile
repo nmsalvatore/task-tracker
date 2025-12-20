@@ -9,7 +9,11 @@ vet: fmt
 	go vet ./...
 
 build: vet
-	go build
+	go build -o task ./cmd/task
 
 clean:
 	go clean
+	rm -f task
+
+test:
+	go test ./cmd/task
