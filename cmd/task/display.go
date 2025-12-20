@@ -6,6 +6,35 @@ import (
 	"strings"
 )
 
+func PrintHelp(writer io.Writer, args []string) {
+	if len(args) == 0 {
+		PrintAppHelp(writer)
+		return
+	}
+
+	cmd := args[0]
+	switch cmd {
+	case "add":
+		PrintAddHelp(writer)
+	case "clear":
+		PrintClearHelp(writer)
+	case "delete":
+		PrintDeleteHelp(writer)
+	case "help":
+		PrintHelpHelp(writer)
+	case "list":
+		PrintListHelp(writer)
+	case "mark":
+		PrintMarkHelp(writer)
+	case "update":
+		PrintUpdateHelp(writer)
+	case "version":
+		PrintVersionHelp(writer)
+	default:
+		fmt.Fprintf(writer, "no command '%s'\n", cmd)
+	}
+}
+
 func PrintAppHelp(writer io.Writer) {
 	message := `A simple command line task tracker.
 
@@ -158,6 +187,10 @@ func PrintTasks(writer io.Writer, tasks []Task) {
 	}
 
 	fmt.Fprint(writer, message)
+}
+
+func PrintVersion() {
+	fmt.Printf("%s, version %s\n", appName, version)
 }
 
 func Bold(s string) string {

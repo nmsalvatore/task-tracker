@@ -87,37 +87,6 @@ func (c *CLI) Delete(writer io.Writer, args []string) error {
 	return nil
 }
 
-func (c *CLI) Help(writer io.Writer, args []string) error {
-	if len(args) == 0 {
-		PrintAppHelp(writer)
-		return nil
-	}
-
-	cmd := args[0]
-	switch cmd {
-	case "add":
-		PrintAddHelp(writer)
-	case "clear":
-		PrintClearHelp(writer)
-	case "delete":
-		PrintDeleteHelp(writer)
-	case "help":
-		PrintHelpHelp(writer)
-	case "list":
-		PrintListHelp(writer)
-	case "mark":
-		PrintMarkHelp(writer)
-	case "update":
-		PrintUpdateHelp(writer)
-	case "version":
-		PrintVersionHelp(writer)
-	default:
-		return fmt.Errorf("no command '%s'", cmd)
-	}
-
-	return nil
-}
-
 func (c *CLI) List(writer io.Writer, args []string) error {
 	if len(args) > 1 {
 		return errors.New("too many arguments")

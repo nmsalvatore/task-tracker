@@ -6,20 +6,40 @@ import (
 	"os"
 )
 
+const (
+	appName = "tasks"
+	version = "0.1.0"
+)
+
 func main() {
-	err := run()
-	if err != nil {
-		log.Fatalf("run failed: %v", err)
+	if len(os.Args) < 2 {
+		fmt.Println("usage: task <command> [arguments]")
+		os.Exit(1)
+	}
+
+	cmd := os.Args[1]
+	args := os.Args[2:]
+
+	switch cmd {
+	case "version":
+		PrintVersion()
+	case "help":
+		PrintHelp(os.Stdout, args)
+	default:
+		err := run(cmd, args)
+		if err != nil {
+			log.Fatalf("run failed: %v", err)
+		}
 	}
 }
 
-func run() error {
+func run(cmd string, args []string) error {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return fmt.Errorf("getting home directory: %v", err)
 	}
 
-	dir := home + "/.tasks"
+	dir := fmt.Sprintf("%s/.%s", home, appName)
 	err = os.Mkdir(dir, 0750)
 	if err != nil && !os.IsExist(err) {
 		return fmt.Errorf("creating data directory: %v", err)
@@ -31,9 +51,6 @@ func run() error {
 		return fmt.Errorf("loading tasks: %v", err)
 	}
 
-	cmd := os.Args[1]
-	args := os.Args[2:]
-
 	switch cmd {
 	case "add":
 		err = cli.Add(os.Stdout, args)
@@ -41,10 +58,9 @@ func run() error {
 		err = cli.Clear(os.Stdout, args)
 	case "delete":
 		err = cli.Delete(os.Stdout, args)
-	case "help":
-		err = cli.Help(os.Stdout, args)
 	case "list":
 		err = cli.List(os.Stdout, args)
+		return nil
 	case "mark":
 		err = cli.Mark(os.Stdout, args)
 	case "update":
